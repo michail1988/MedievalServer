@@ -1,10 +1,15 @@
+var express = require('express');
+var app = express();
 
-console.log('hello from Node.js server');
+var db = require('./db')
 
+app.get('/', function (req, res) {
+   res.send('Hello World');
+})
 
-var http = require('http');
-
-http.createServer(function (req, res) {
-    res.writeHead(200, {'Content-Type': 'text/html'});
-    res.end('Hello World!');
-}).listen(2020); 
+var server = app.listen(3000, function () {
+   var host = server.address().address
+   var port = server.address().port
+   
+   console.log("Listening at http://%s:%s", host, port)
+})
