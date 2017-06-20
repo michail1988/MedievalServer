@@ -1,0 +1,23 @@
+{
+  "name": "medieval-server",
+  "version": "1.0.0",
+  "description": "Serwer portalu mediewisty",
+  "main": "server.js",
+  "dependencies": {},
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node src/server.js"
+  },
+  "keywords": [],
+  "author": "michal labuda",
+  "license": "ISC",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/michail1988/MedievalServer.git"
+  },
+  "bugs": {
+    "url": "https://github.com/michail1988/MedievalServer/issues"
+  },
+  "homepage": "https://github.com/michail1988/MedievalServer#readme"
+}
