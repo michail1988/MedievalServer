@@ -2,6 +2,20 @@ var express = require('express');
 var app = express();
 var cors = require('cors');
 
+var originsWhitelist = [ 'http://localhost:4200', // this is my front-end url
+													// for development
+'http://www.myproductionurl.com' ];
+var corsOptions = {
+	origin : function(origin, callback) {
+		var isWhitelisted = originsWhitelist.indexOf(origin) !== -1;
+		callback(null, isWhitelisted);
+	},
+	credentials : true
+}
+
+// here is the magic
+app.use(cors(corsOptions));
+
 var db = require('./db');
 
 var enrolments = require('./db/enrolments');
@@ -14,13 +28,17 @@ app.get('/', function(req, res) {
 
 app.get('/enrolments', function(req, res) {
 	console.log('/enrolments')
-	
-	enrolments.getAll(function(err,
-			rows) {
+
+	enrolments.getAll(function(err, rows) {
 		res.send(rows);
 	});
 })
 
+app.post('/enrolments', function(req, res) {
+	console.log('/wywolano post, req=' + req)
+
+	res.send('dziekuje');
+})
 
 db.connect();
 
