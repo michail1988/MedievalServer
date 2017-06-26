@@ -15,3 +15,23 @@ connection.connect(function(err) {
   
   console.log('Polaczono z baza danych.')
 })
+
+exports.connect = function() {
+  state.pool = mysql.createPool({
+    host: 'localhost',
+    user: 'medievaluser',
+    password: 'medievaluser3306',
+    database: 'medieval'
+  })
+
+  console.log('Wywolano ta funkcje.')
+}
+
+exports.get = function() {
+  return state.pool
+}
+
+var state = {
+  pool: null,
+  mode: null,
+}

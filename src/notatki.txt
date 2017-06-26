@@ -1,0 +1,18 @@
+db.createArticle('Michal Labuda', 'O obrotach sfer niebieskich', function(err,
+		rows) {
+	if (err)
+		throw err
+	console.log('Article created..')
+	console.log(rows)
+})
+
+db.getAll(function(err, rows) {
+	if (err)
+		throw err
+	console.log('Selected...')
+
+	for (var i = 0; i < rows.length; i++) {
+		var row = rows[i];
+		console.log(row.author);
+	}
+})

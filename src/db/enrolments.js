@@ -1,4 +1,4 @@
-var db = require('./db');
+var db = require('../db');
 
 exports.getAll = function(done) {
 	db.get().query('SELECT NAME, SURNAME, DATE, EMAIL FROM MED_ENROLMENTS',
