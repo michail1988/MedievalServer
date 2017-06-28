@@ -3,8 +3,9 @@ var app = express();
 var cors = require('cors');
 
 var originsWhitelist = [ 'http://localhost:4200', // this is my front-end url
-													// for development
+// for development
 'http://www.myproductionurl.com' ];
+
 var corsOptions = {
 	origin : function(origin, callback) {
 		var isWhitelisted = originsWhitelist.indexOf(origin) !== -1;
@@ -15,6 +16,15 @@ var corsOptions = {
 
 // here is the magic
 app.use(cors(corsOptions));
+
+var bodyParser = require('body-parser')
+
+// Tell express to use the body-parser middleware and to not parse extended
+// bodies
+app.use(bodyParser.urlencoded({
+	extended : false
+}))
+app.use(bodyParser.json())
 
 var db = require('./db');
 
@@ -35,9 +45,25 @@ app.get('/enrolments', function(req, res) {
 })
 
 app.post('/enrolments', function(req, res) {
-	console.log('/wywolano post, req=' + req)
 
-	res.send('dziekuje');
+	req.on('data', function(chunk) {
+		var bodydata = chunk.toString('utf8');
+		console.log(bodydata)
+	});
+
+	console.log('wywolano post, req.body=' + req.body)
+	console.log('wywolano post, req.body.name=' + req.body.name)
+	console.log('wywolano post, req.body.surname=' + req.body.surname)
+	console.log('wywolano post, req.body.date=' + req.body.date)
+	console.log('wywolano post, req.body.email=' + req.body.email)
+
+	enrolments.createEnrolment(req.body.name, req.body.surname, req.body.date,
+			req.body.email, function(err, rows) {
+		
+		console.log('Err=' + err)
+				console.log('rows=' + rows)
+			});
+
 })
 
 db.connect();
