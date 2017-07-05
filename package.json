@@ -3,8 +3,12 @@
   "version": "1.0.0",
   "description": "Serwer portalu mediewisty",
   "main": "server.js",
-  "dependencies": {},
-  "devDependencies": {},
+  "dependencies": {
+    "cors": "^2.8.3"
+  },
+  "devDependencies": {
+    "@angular/cli": "^1.2.0"
+  },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node src/server.js"
