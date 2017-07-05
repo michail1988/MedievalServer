@@ -46,13 +46,40 @@ app.get('/enrolments', function(req, res) {
 
 app.post('/enrolments', function(req, res) {
 
-
 	enrolments.createEnrolment(req.body.name, req.body.surname, req.body.date,
 			req.body.email, function(err, rows) {
-		
-		console.log('Err=' + err)
+
+				console.log('Err=' + err)
 				console.log('rows=' + rows)
 			});
+
+})
+
+var admins = require('./db/admins');
+
+app.post('/login', function(req, res) {
+
+	console.log('----------------------------------------------')
+	console.log('Proba zalogowania, username=' + req.body.username
+			+ ' password=' + req.body.password);
+
+	var result = admins.login(req.body.username, req.body.password, function(
+			err, rows) {
+
+		// TODO if error
+
+		if (rows == 0) {
+			console.log('Nieprawidlowe dane logowania.')
+			res.send('NOK');
+		} else {
+			console.log('rows=' + rows)
+			console.log('Zalogowano uzytkownika: ' + req.body.username)
+			res.send('OK');
+		}
+
+	});
+
+	console.log('Rezultat=' + result)
 
 })
 
