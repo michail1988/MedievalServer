@@ -30,12 +30,6 @@ var db = require('./db');
 
 var enrolments = require('./db/enrolments');
 
-app.get('/', function(req, res) {
-	res.send('Hello World');
-
-	console.log('Byl request')
-})
-
 app.get('/enrolments', function(req, res) {
 	console.log('/enrolments')
 
@@ -80,6 +74,27 @@ app.post('/login', function(req, res) {
 	});
 
 	console.log('Rezultat=' + result)
+
+})
+
+var articles = require('./db/articles');
+
+app.get('/articles', function(req, res) {
+	console.log('/articles')
+
+	articles.getAll(function(err, rows) {
+		res.send(rows);
+	});
+})
+
+app.post('/articles', function(req, res) {
+
+	articles.createArticle(req.body.author, req.body.title, req.body.content,
+			req.body.headline, function(err, rows) {
+
+				console.log('Err=' + err)
+				console.log('rows=' + rows)
+			});
 
 })
 

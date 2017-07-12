@@ -1,20 +1,27 @@
 var db = require('../db');
 
-exports.createArticle = function(user, text, done) {
-	  var values = [user, text]
-	  
-	  this.get().query('INSERT INTO MED_ARTICLES (AUTHOR, CONTENT) VALUES(?, ?)', values, function(err, result) {
-		  if (err) return done(err)
-		    done(null, result)
-		    
-	    console.log('Pomyslny insert.')
-	  })
-	}
+exports.createArticle = function(author, title, content, headline, done) {
+	var values = [ author, title, content, headline ]
 
-	exports.getAll = function(done) {
-	  this.get().query('SELECT AUTHOR, CONTENT FROM MED_ARTICLES', function (err, rows) {
-	    if (err) return done(err)
-	    done(null, rows)
-	     console.log('Pomyslny select.')
-	  })
-	}
+	db
+			.get()
+			.query(
+					'INSERT INTO MED_ARTICLES (AUTHOR, TITLE, CONTENT, HEADLINE) VALUES(?, ?, ?, ?)',
+					values, function(err, result) {
+						if (err)
+							return done(err)
+						done(null, result)
+
+						console.log('Pomyslny insert do tabeli MED_ARTICLES.')
+					})
+}
+
+exports.getAll = function(done) {
+	db.get().query(
+			'SELECT author, title, content, headline FROM MED_ARTICLES',
+			function(err, rows) {
+				if (err)
+					return done(err)
+				done(null, rows)
+			})
+}
