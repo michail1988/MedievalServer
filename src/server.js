@@ -98,6 +98,16 @@ app.post('/articles', function(req, res) {
 
 })
 
+var universities = require('./db/universities');
+
+app.get('/universities', function(req, res) {
+	console.log('/universities')
+	
+	universities.getByName(req.query.university, function(err, rows) {
+		res.send(rows);
+	});
+})
+
 db.connect();
 
 var server = app.listen(3000, function() {
