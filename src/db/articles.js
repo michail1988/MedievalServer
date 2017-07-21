@@ -17,11 +17,24 @@ exports.createArticle = function(author, title, content, headline, done) {
 }
 
 exports.getAll = function(done) {
-	db.get().query(
-			'SELECT author, title, content, headline FROM MED_ARTICLES',
+	db.get().query('SELECT id, author, title, content, headline FROM MED_ARTICLES',
 			function(err, rows) {
 				if (err)
 					return done(err)
 				done(null, rows)
 			})
+}
+
+exports.getArticle = function(id, done) {
+
+	var values = [ id ]
+	db
+			.get()
+			.query(
+					'SELECT id, author, title, content, headline FROM MED_ARTICLES where id = ?',
+					values, function(err, rows) {
+						if (err)
+							return done(err)
+						done(null, rows)
+					})
 }

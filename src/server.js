@@ -98,11 +98,48 @@ app.post('/articles', function(req, res) {
 
 })
 
+// todo michal co jesli nic nie znaleziono?
+app.get('/article', function(req, res) {
+	console.log('/article')
+
+	console.log('req.query.id=' + req.query.id)
+	console.log('req.body.id=' + req.body.id)
+
+	console.log('req.query=' + req.query)
+	console.log('req.body=' + req.body)
+
+	articles.getArticle(req.query.id, function(err, rows) {
+
+		if (rows == 0) {
+			console.log('Nic nie znalazlem.')
+		}
+
+		if (rows) {
+			var util = require('util');
+
+			console.log(util.inspect(rows, {
+				showHidden : true,
+				depth : null
+			}));
+
+			console.log('Sending=' + rows)
+
+			if (rows.length == 1) {
+				var row = rows[0];
+				res.send(rows[0]);
+			}
+		}
+
+		//TODO return sth
+		
+	});
+})
+
 var universities = require('./db/universities');
 
 app.get('/universities', function(req, res) {
 	console.log('/universities')
-	
+
 	universities.getByName(req.query.university, function(err, rows) {
 		res.send(rows);
 	});
