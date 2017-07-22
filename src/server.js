@@ -102,12 +102,6 @@ app.post('/articles', function(req, res) {
 app.get('/article', function(req, res) {
 	console.log('/article')
 
-	console.log('req.query.id=' + req.query.id)
-	console.log('req.body.id=' + req.body.id)
-
-	console.log('req.query=' + req.query)
-	console.log('req.body=' + req.body)
-
 	articles.getArticle(req.query.id, function(err, rows) {
 
 		if (rows == 0) {
@@ -130,8 +124,24 @@ app.get('/article', function(req, res) {
 			}
 		}
 
-		//TODO return sth
+		// TODO return sth
+
+	});
+})
+
+app.get('/articleHistory', function(req, res) {
+	console.log('/articleHistory')
+
+	articles.getArticleHistory(req.query.id, function(err, rows) {
 		
+		var util = require('util');
+
+		console.log(util.inspect(rows, {
+			showHidden : true,
+			depth : null
+		}));
+		
+		res.send(rows);
 	});
 })
 

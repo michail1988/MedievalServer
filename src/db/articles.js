@@ -38,3 +38,18 @@ exports.getArticle = function(id, done) {
 						done(null, rows)
 					})
 }
+
+//TODO zamiast tabeli MED_ADMINS bedzie tabela userow
+exports.getArticleHistory = function(fk_article, done) {
+
+	var values = [ fk_article ]
+	db
+			.get()
+			.query(
+					'SELECT author, title, content, headline, username as editor, modified_date FROM MED_ARTICLES_H, MED_ADMINS a where fk_article = ? and FK_EDITOR = a.ID order by modified_date desc',
+					values, function(err, rows) {
+						if (err)
+							return done(err)
+						done(null, rows)
+					})
+}
