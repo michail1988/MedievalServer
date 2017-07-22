@@ -1,18 +1,34 @@
 var db = require('../db');
 
-exports.createArticle = function(author, title, content, headline, done) {
-	var values = [ author, title, content, headline ]
+exports.createArticle = function(author, title, content, headline, fk_editor, done) {
+	var values = [ author, title, content, headline, fk_editor ]
 
 	db
 			.get()
 			.query(
-					'INSERT INTO MED_ARTICLES (AUTHOR, TITLE, CONTENT, HEADLINE) VALUES(?, ?, ?, ?)',
+					'INSERT INTO MED_ARTICLES (AUTHOR, TITLE, CONTENT, HEADLINE, FK_EDITOR) VALUES(?, ?, ?, ?, ?)',
 					values, function(err, result) {
 						if (err)
 							return done(err)
 						done(null, result)
 
 						console.log('Pomyslny insert do tabeli MED_ARTICLES.')
+					})
+}
+
+exports.updateArticle = function(author, title, content, headline, fk_editor, id, done) {
+	var values = [ author, title, content, headline, fk_editor, id ]
+
+	db
+			.get()
+			.query(
+					'UPDATE MED_ARTICLES set AUTHOR =?, TITLE=?, CONTENT=?, HEADLINE=?, FK_EDITOR=? where ID = ?',
+					values, function(err, result) {
+						if (err)
+							return done(err)
+						done(null, result)
+
+						console.log('Pomyslny update do tabeli MED_ARTICLES.')
 					})
 }
 

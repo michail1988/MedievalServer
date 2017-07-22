@@ -80,7 +80,7 @@ app.post('/login', function(req, res) {
 var articles = require('./db/articles');
 
 app.get('/articles', function(req, res) {
-	console.log('/articles')
+	
 
 	articles.getAll(function(err, rows) {
 		res.send(rows);
@@ -89,8 +89,21 @@ app.get('/articles', function(req, res) {
 
 app.post('/articles', function(req, res) {
 
+	console.log('/articles')
+	
 	articles.createArticle(req.body.author, req.body.title, req.body.content,
-			req.body.headline, function(err, rows) {
+			req.body.headline, req.body.fk_editor, function(err, rows) {
+
+			});
+
+})
+
+app.put('/articles', function(req, res) {
+
+	console.log('/articles')
+	
+	articles.updateArticle(req.body.author, req.body.title, req.body.content,
+			req.body.headline, req.body.fk_editor, req.body.id, function(err, rows) {
 
 				console.log('Err=' + err)
 				console.log('rows=' + rows)
