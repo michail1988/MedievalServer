@@ -80,9 +80,24 @@ app.post('/login', function(req, res) {
 var articles = require('./db/articles');
 
 app.get('/articles', function(req, res) {
-	
+	console.log('articles')
+	articles.getActive(function(err, rows) {
+		res.send(rows);
+	});
+})
 
-	articles.getAll(function(err, rows) {
+app.get('/deletedArticles', function(req, res) {
+	console.log('deletedArticles')
+
+	articles.getDeletedArticles(function(err, rows) {
+		
+		var util = require('util');
+
+		console.log(util.inspect(rows, {
+			showHidden : true,
+			depth : null
+		}));
+		
 		res.send(rows);
 	});
 })
@@ -97,6 +112,27 @@ app.post('/articles', function(req, res) {
 			});
 
 })
+
+app.post('/deleteArticle', function(req, res) {
+
+	console.log('/deleteArticle')
+	
+	articles.deleteArticle(req.body.id, req.body.fk_editor, function(err, rows) {
+		res.send('OK');
+			});
+
+})
+
+app.post('/activateArticle', function(req, res) {
+
+	console.log('/activateArticle')
+	
+	articles.setActiveArticle(req.body.id, req.body.fk_editor, function(err, rows) {
+		res.send('OK');
+			});
+
+})
+
 
 app.put('/articles', function(req, res) {
 
