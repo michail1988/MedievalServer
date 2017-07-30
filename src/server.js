@@ -50,6 +50,24 @@ app.post('/enrolments', function(req, res) {
 
 })
 
+var users = require('./db/users');
+app.post('/users', function(req, res) {
+	console.log('/users')
+
+	users.createUser(req, function(err, rows) {
+		console.log('Err=' + err)
+		console.log('rows=' + rows)
+	});
+})
+
+app.get('/users', function(req, res) {
+	console.log('/users')
+
+	users.getAll(function(err, rows) {
+		res.send(rows);
+	});
+})
+
 var admins = require('./db/admins');
 
 app.post('/login', function(req, res) {
@@ -140,16 +158,13 @@ var fileUploader = require('./utils/file-uploader');
 app.post('/upload', function(req, res) {
 
 	console.log('/upload')
-	
 
-		console.log(util.inspect(req.files, {
-			showHidden : true,
-			depth : null
-		}));
-	
-	
+	console.log(util.inspect(req.files, {
+		showHidden : true,
+		depth : null
+	}));
+
 	fileUploader.uploadFile(req, res);
-
 
 })
 
