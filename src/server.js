@@ -1,6 +1,7 @@
 var express = require('express');
 var app = express();
 var cors = require('cors');
+var util = require('util');
 
 var originsWhitelist = [ 'http://localhost:4200', // this is my front-end url
 // for development
@@ -132,6 +133,23 @@ app.post('/activateArticle', function(req, res) {
 			rows) {
 		res.send('OK');
 	});
+
+})
+
+var fileUploader = require('./utils/file-uploader');
+app.post('/upload', function(req, res) {
+
+	console.log('/upload')
+	
+
+		console.log(util.inspect(req.files, {
+			showHidden : true,
+			depth : null
+		}));
+	
+	
+	fileUploader.uploadFile(req, res);
+
 
 })
 
