@@ -21,7 +21,7 @@ exports.sendEmail = function() {
 	// setup e-mail data with unicode symbols
 	var mailOptions = {
 		from : "Kongres mediewistow polskich ✔ <mediewisci@kongres.pl>", // sender
-																			// address
+		// address
 		to : "michail1988@o2.pl", // list of receivers
 		subject : "Dziekujemy za zgloszenie ✔", // Subject line
 		text : "Hello world ✔", // plaintext body
@@ -40,5 +40,25 @@ exports.sendEmail = function() {
 		// following line
 		// smtpTransport.close(); // shut down the connection pool, no more
 		// messages
+	});
+}
+
+exports.sendMessageEmail = function(name, email, subject, message) {
+
+	var mailOptions = {
+		from : email, // sender
+		to : "michail1988@o2.pl", // todo parametryzacja, administracja
+		subject : subject, // Subject line
+		text : message, // plaintext body
+		html : "<b>Wiadomosc z formularza kontaktowego od " + name + "</b><br/><hr><br/>"
+		 + message
+	}
+
+	transporter.sendMail(mailOptions, function(error, response) {
+		if (error) {
+			console.log(error);
+		} else {
+			console.log("Message sent: " + message);
+		}
 	});
 }
