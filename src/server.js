@@ -60,6 +60,48 @@ app.post('/users', function(req, res) {
 	});
 })
 
+app.post('/login', function(req, res) {
+
+	console.log('----------------------------------------------')
+	console.log('Proba zalogowania, username=' + req.body.username
+			+ ' password=' + req.body.password);
+
+	var result = users.login(req.body.username, req.body.password, function(
+			err, rows) {
+
+		// TODO if error
+
+		if (rows) {
+			var util = require('util');
+
+			console.log(util.inspect(rows, {
+				showHidden : true,
+				depth : null
+			}));
+		}
+		if (rows == 0) {
+			console.log('Nieprawidlowe dane logowania.')
+			
+			res.status(400).send({
+				   message: 'nieprawidlowe dane logowania'
+			});
+		} else {
+			console.log('rows=' + rows[0])
+			console.log('Zalogowano uzytkownika: ' + req.body.username)
+			
+			res.send(rows[0]);
+			if (rows.length == 1) {
+				var row = rows[0];
+				res.send(rows[0]);
+			}
+		}
+
+	});
+
+	console.log('Rezultat=' + result)
+
+})
+
 app.get('/users', function(req, res) {
 	console.log('/users')
 
@@ -70,31 +112,6 @@ app.get('/users', function(req, res) {
 
 var admins = require('./db/admins');
 
-app.post('/login', function(req, res) {
-
-	console.log('----------------------------------------------')
-	console.log('Proba zalogowania, username=' + req.body.username
-			+ ' password=' + req.body.password);
-
-	var result = admins.login(req.body.username, req.body.password, function(
-			err, rows) {
-
-		// TODO if error
-
-		if (rows == 0) {
-			console.log('Nieprawidlowe dane logowania.')
-			res.send('NOK');
-		} else {
-			console.log('rows=' + rows)
-			console.log('Zalogowano uzytkownika: ' + req.body.username)
-			res.send('OK');
-		}
-
-	});
-
-	console.log('Rezultat=' + result)
-
-})
 
 var articles = require('./db/articles');
 
@@ -257,6 +274,17 @@ app.get('/email', function(req, res) {
 	console.log('/email')
 
 	mailer.sendEmail();
+})
+
+app.post('/contactMessage', function(req, res) {
+
+	console.log('/contactMessage')
+
+	//TODO czy dodac do bazy?
+	
+	mailer.sendMessageEmail(req.body.name, req.body.email, req.body.subject, req.body.message);
+
+	res.send('OK');
 })
 
 db.connect();

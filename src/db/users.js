@@ -34,3 +34,19 @@ exports.getAll = function(done) {
 						console.log('Users selected')
 					})
 }
+
+exports.login = function(username, password, done) {
+	var values = [ username, password ]
+
+	db
+			.get()
+			.query(
+					'SELECT id, name, surname, registerdate, email, password, university, phone, congressrole, subjectdescription, '
+					+ 'contactcomments, confirmation, privileges FROM MED_USERS where email = ? and password = ?',
+					values, function(err, rows) {
+						if (err)
+							// TODO if error
+							return done(err)
+						done(null, rows)
+					})
+}
