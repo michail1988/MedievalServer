@@ -81,14 +81,14 @@ app.post('/login', function(req, res) {
 		}
 		if (rows == 0) {
 			console.log('Nieprawidlowe dane logowania.')
-			
+
 			res.status(400).send({
-				   message: 'nieprawidlowe dane logowania'
+				message : 'nieprawidlowe dane logowania'
 			});
 		} else {
 			console.log('rows=' + rows[0])
 			console.log('Zalogowano uzytkownika: ' + req.body.username)
-			
+
 			res.send(rows[0]);
 			if (rows.length == 1) {
 				var row = rows[0];
@@ -111,7 +111,6 @@ app.get('/users', function(req, res) {
 })
 
 var admins = require('./db/admins');
-
 
 var articles = require('./db/articles');
 
@@ -256,6 +255,78 @@ app.get('/universities', function(req, res) {
 	});
 })
 
+var comments = require('./db/comments');
+
+app.get('/allcomments', function(req, res) {
+	console.log('/allcomments')
+
+	comments.getAllComments(req.query.id, function(err, rows) {
+
+		var util = require('util');
+
+		console.log(util.inspect(rows, {
+			showHidden : true,
+			depth : null
+		}));
+
+		res.send(rows);
+	});
+})
+
+app.get('/confirmedcomments', function(req, res) {
+	console.log('/confirmedcomments')
+
+	comments.getConfirmedComments(req.query.id, function(err, rows) {
+
+		var util = require('util');
+
+		console.log(util.inspect(rows, {
+			showHidden : true,
+			depth : null
+		}));
+
+		res.send(rows);
+	});
+})
+
+app.post('/allcomments', function(req, res) {
+
+	console.log('/post allcomments')
+
+	comments.createComment(req.body.parentcomment, req.body.comment, req.body.fk_post, req.body.fk_user, 'Y', function(err,
+			rows) {
+		
+		//ok
+		comments.getAllComments(req.body.fk_post, function(err, rows) {
+			res.send(rows);
+		});
+	});
+
+})
+
+app.post('/confirmedcomments', function(req, res) {
+
+	console.log('/confirmedcomments')
+
+	comments.createComment(req.body.parentcomment, req.body.comment, req.body.fk_post, req.body.fk_user, 'N', function(err,
+			rows) {
+		
+		//ok
+		comments.getConfirmedComments(req.body.fk_post, function(err, rows) {
+
+			var util = require('util');
+
+			console.log(util.inspect(rows, {
+				showHidden : true,
+				depth : null
+			}));
+
+			res.send(rows);
+		});
+	});
+
+})
+
 // var smtpServer = require('./utils/smtp-server');
 //
 // var emailSender = require('./utils/email');
@@ -280,11 +351,28 @@ app.post('/contactMessage', function(req, res) {
 
 	console.log('/contactMessage')
 
-	//TODO czy dodac do bazy?
-	
-	mailer.sendMessageEmail(req.body.name, req.body.email, req.body.subject, req.body.message);
+	// TODO czy dodac do bazy?
+
+	mailer.sendMessageEmail(req.body.name, req.body.email, req.body.subject,
+			req.body.message);
 
 	res.send('OK');
+})
+
+app.get('/image', function(req, res) {
+	// req.params.id
+	res.sendFile('dywan.jpg', {
+		root : './uploads',
+		headers : {
+			'Content-Type' : 'image/jpeg'
+		}
+	}, function(err) {
+		if (err) {
+			console.log('err')
+			throw err;
+		} else
+			console.log('sent')
+	})
 })
 
 db.connect();
