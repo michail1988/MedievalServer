@@ -50,3 +50,19 @@ exports.login = function(username, password, done) {
 						done(null, rows)
 					})
 }
+
+exports.getUser = function(id, done) {
+	var values = [ id ]
+	
+	db
+			.get()
+			.query(
+					'SELECT id, name, surname, email, password, registerdate, university, phone, congressrole, subjectdescription, '
+							+ 'contactcomments, confirmation, privileges FROM MED_USERS where id = ?',
+							values, function(err, rows) {
+						if (err)
+							return done(err)
+						done(null, rows)
+						console.log('User selected')
+					})
+}

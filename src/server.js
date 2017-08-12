@@ -110,6 +110,33 @@ app.get('/users', function(req, res) {
 	});
 })
 
+// todo michal co jesli nic nie znaleziono?
+app.get('/user', function(req, res) {
+	console.log('/user')
+
+	users.getUser(req.query.id, function(err, rows) {
+
+		if (rows == 0) {
+			console.log('Nic nie znalazlem.')
+		}
+
+		if (rows) {
+			var util = require('util');
+
+			console.log(util.inspect(rows, {
+				showHidden : true,
+				depth : null
+			}));
+
+			if (rows.length == 1) {
+				var row = rows[0];
+				res.send(rows[0]);
+			}
+		}
+
+	});
+})
+
 var admins = require('./db/admins');
 
 var articles = require('./db/articles');
@@ -327,15 +354,158 @@ app.post('/confirmedcomments', function(req, res) {
 
 })
 
-// var smtpServer = require('./utils/smtp-server');
-//
-// var emailSender = require('./utils/email');
-//
-// app.get('/email', function(req, res) {
-// console.log('email')
-//
-// emailSender.sendEmail();
-// })
+var schedules = require('./db/schedules');
+
+app.get('/schedules', function(req, res) {
+	console.log('schedules')
+	schedules.getAll(function(err, rows) {
+		res.send(rows);
+	});
+})
+
+app.post('/schedule', function(req, res) {
+
+	console.log('/schedule')
+
+	schedules.createSchedule(req.body.title, function(err, rows) {
+		res.send('OK');
+			});
+
+})
+
+app.post('/deleteSchedule', function(req, res) {
+
+	console.log('/deleteSchedule')
+
+	schedules.deleteSchedule(req.body.id,
+			function(err, rows) {
+				res.send('OK');
+			});
+
+})
+
+app.put('/schedule', function(req, res) {
+
+	console.log('/schedule')
+
+	schedules.updateSchedule(req.body.id, req.body.title, function(err,
+					rows) {
+
+
+				res.send('OK');
+			});
+})
+
+// todo michal co jesli nic nie znaleziono? send error
+app.get('/schedule', function(req, res) {
+	console.log('/schedule')
+
+	schedules.getSchedule(req.query.id, function(err, rows) {
+
+		if (rows == 0) {
+			console.log('Nic nie znalazlem.')
+		}
+
+		if (rows) {
+			var util = require('util');
+
+			console.log(util.inspect(rows, {
+				showHidden : true,
+				depth : null
+			}));
+
+			console.log('Sending=' + rows)
+
+			if (rows.length == 1) {
+				var row = rows[0];
+				res.send(rows[0]);
+			}
+		}
+
+		// TODO return sth
+
+	});
+})
+
+var events = require('./db/events');
+
+app.get('/allevents', function(req, res) {
+	console.log('allevents')
+	events.getAll(function(err, rows) {
+		res.send(rows);
+	});
+})
+
+app.get('/events', function(req, res) {
+	console.log('events')
+	events.getEvents(req.query.fk_schedule, function(err, rows) {
+		res.send(rows);
+	});
+})
+
+app.post('/event', function(req, res) {
+
+	console.log('/event')
+
+	events.createEvent(req.body.from_date, req.body.to_date, req.body.fk_schedule, req.body.title, 
+			req.body.description, function(err, rows) {
+		res.send('OK');
+			});
+
+})
+
+app.post('/deleteEvent', function(req, res) {
+
+	console.log('/deleteSchedule')
+
+	schedules.deleteSchedule(req.body.id,
+			function(err, rows) {
+				res.send('OK');
+			});
+
+})
+
+app.put('/event', function(req, res) {
+
+	console.log('/event')
+
+	events.updateEvent(req.body.id, req.body.from_date, req.body.to_date, req.body.fk_schedule, 
+			req.body.title, req.body.description, function(err,
+					rows) {
+				res.send('OK');
+			});
+})
+
+// todo michal co jesli nic nie znaleziono? send error
+app.get('/event', function(req, res) {
+	console.log('/event')
+
+	events.getEvent(req.query.id, function(err, rows) {
+
+		if (rows == 0) {
+			console.log('Nic nie znalazlem.')
+		}
+
+		if (rows) {
+			var util = require('util');
+
+			console.log(util.inspect(rows, {
+				showHidden : true,
+				depth : null
+			}));
+
+			console.log('Sending=' + rows)
+
+			if (rows.length == 1) {
+				var row = rows[0];
+				res.send(rows[0]);
+			}
+		}
+
+		// TODO return sth
+
+	});
+})
 
 var config = require('./config');
 
@@ -359,17 +529,22 @@ app.post('/contactMessage', function(req, res) {
 	res.send('OK');
 })
 
-app.get('/image', function(req, res) {
+//todo rozpoznawanie rozszerzenia jpg/png itp
+app.get('/profileimage', function(req, res) {
+	console.log('/profileimage')
+	console.log('req.query.id=' + req.query.id)
+	
+	
 	// req.params.id
-	res.sendFile('dywan.jpg', {
-		root : './uploads',
+	res.sendFile(req.query.id + '.jpg', {
+		root : './images/user',
 		headers : {
 			'Content-Type' : 'image/jpeg'
 		}
 	}, function(err) {
 		if (err) {
 			console.log('err')
-			throw err;
+			// res error not found
 		} else
 			console.log('sent')
 	})
