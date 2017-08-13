@@ -272,6 +272,198 @@ app.get('/articleHistory', function(req, res) {
 	});
 })
 
+var news = require('./db/news');
+
+app.get('/allnews', function(req, res) {
+	console.log('allnews')
+	news.getActive(function(err, rows) {
+		res.send(rows);
+	});
+})
+
+app.get('/deletedNews', function(req, res) {
+	console.log('deletedNews')
+
+	news.getDeletedNews(function(err, rows) {
+
+		var util = require('util');
+
+		console.log(util.inspect(rows, {
+			showHidden : true,
+			depth : null
+		}));
+
+		res.send(rows);
+	});
+})
+
+app.post('/news', function(req, res) {
+
+	console.log('/news')
+
+	news.createNews(req.body.author, req.body.title, req.body.content,
+			req.body.headline, req.body.fk_editor, function(err, rows) {
+
+			});
+
+})
+
+app.post('/deleteNews', function(req, res) {
+
+	console.log('/deleteNews')
+
+	news.deleteNews(req.body.id, req.body.fk_editor, function(err, rows) {
+		res.send('OK');
+	});
+
+})
+
+app.post('/activateNews', function(req, res) {
+
+	console.log('/activateNews')
+
+	news.setActiveNews(req.body.id, req.body.fk_editor, function(err, rows) {
+		res.send('OK');
+	});
+
+})
+
+app.put('/news', function(req, res) {
+
+	console.log('/news')
+
+	news.updateNews(req.body.author, req.body.title, req.body.content,
+			req.body.headline, req.body.fk_editor, req.body.id, function(err,
+					rows) {
+
+				console.log('Err=' + err)
+				console.log('rows=' + rows)
+			});
+
+})
+
+// todo michal co jesli nic nie znaleziono?
+app.get('/news', function(req, res) {
+	console.log('/news')
+
+	news.getNews(req.query.id, function(err, rows) {
+
+		if (rows == 0) {
+			console.log('Nic nie znalazlem.')
+		}
+
+		if (rows) {
+			var util = require('util');
+
+			console.log(util.inspect(rows, {
+				showHidden : true,
+				depth : null
+			}));
+
+			console.log('Sending=' + rows)
+
+			if (rows.length == 1) {
+				var row = rows[0];
+				res.send(rows[0]);
+			}
+		}
+
+		// TODO return sth
+
+	});
+})
+
+app.get('/newsHistory', function(req, res) {
+	console.log('/newsHistory')
+
+	news.getNewsHistory(req.query.id, function(err, rows) {
+
+		var util = require('util');
+
+		console.log(util.inspect(rows, {
+			showHidden : true,
+			depth : null
+		}));
+
+		res.send(rows);
+	});
+})
+
+var fileUploader = require('./utils/file-uploader');
+app.post('/upload', function(req, res) {
+
+	console.log('/upload')
+
+	console.log(util.inspect(req.files, {
+		showHidden : true,
+		depth : null
+	}));
+
+	fileUploader.uploadFile(req, res);
+
+})
+
+app.put('/articles', function(req, res) {
+
+	console.log('/articles')
+
+	articles.updateArticle(req.body.author, req.body.title, req.body.content,
+			req.body.headline, req.body.fk_editor, req.body.id, function(err,
+					rows) {
+
+				console.log('Err=' + err)
+				console.log('rows=' + rows)
+			});
+
+})
+
+// todo michal co jesli nic nie znaleziono?
+app.get('/article', function(req, res) {
+	console.log('/article')
+
+	articles.getArticle(req.query.id, function(err, rows) {
+
+		if (rows == 0) {
+			console.log('Nic nie znalazlem.')
+		}
+
+		if (rows) {
+			var util = require('util');
+
+			console.log(util.inspect(rows, {
+				showHidden : true,
+				depth : null
+			}));
+
+			console.log('Sending=' + rows)
+
+			if (rows.length == 1) {
+				var row = rows[0];
+				res.send(rows[0]);
+			}
+		}
+
+		// TODO return sth
+
+	});
+})
+
+app.get('/articleHistory', function(req, res) {
+	console.log('/articleHistory')
+
+	articles.getArticleHistory(req.query.id, function(err, rows) {
+
+		var util = require('util');
+
+		console.log(util.inspect(rows, {
+			showHidden : true,
+			depth : null
+		}));
+
+		res.send(rows);
+	});
+})
+
 var universities = require('./db/universities');
 
 app.get('/universities', function(req, res) {
@@ -282,28 +474,12 @@ app.get('/universities', function(req, res) {
 	});
 })
 
-var comments = require('./db/comments');
+var articleComments = require('./db/articleComments');
 
-app.get('/allcomments', function(req, res) {
-	console.log('/allcomments')
+app.get('/allArticleComments', function(req, res) {
+	console.log('/allArticleComments')
 
-	comments.getAllComments(req.query.id, function(err, rows) {
-
-		var util = require('util');
-
-		console.log(util.inspect(rows, {
-			showHidden : true,
-			depth : null
-		}));
-
-		res.send(rows);
-	});
-})
-
-app.get('/confirmedcomments', function(req, res) {
-	console.log('/confirmedcomments')
-
-	comments.getConfirmedComments(req.query.id, function(err, rows) {
+	articleComments.getAllComments(req.query.id, function(err, rows) {
 
 		var util = require('util');
 
@@ -316,41 +492,132 @@ app.get('/confirmedcomments', function(req, res) {
 	});
 })
 
-app.post('/allcomments', function(req, res) {
+app.get('/confirmedArticleComments', function(req, res) {
+	console.log('/confirmedArticleComments')
 
-	console.log('/post allcomments')
+	articleComments.getConfirmedComments(req.query.id, function(err, rows) {
 
-	comments.createComment(req.body.parentcomment, req.body.comment, req.body.fk_post, req.body.fk_user, 'Y', function(err,
-			rows) {
-		
-		//ok
-		comments.getAllComments(req.body.fk_post, function(err, rows) {
-			res.send(rows);
-		});
+		var util = require('util');
+
+		console.log(util.inspect(rows, {
+			showHidden : true,
+			depth : null
+		}));
+
+		res.send(rows);
 	});
+})
+
+app.post('/allArticleComments', function(req, res) {
+
+	console.log('/post allArticleComments')
+
+	articleComments.createComment(req.body.parentcomment, req.body.comment,
+			req.body.fk_post, req.body.fk_user, 'Y', function(err, rows) {
+
+				// ok
+		articleComments.getAllComments(req.body.fk_post, function(err, rows) {
+					res.send(rows);
+				});
+			});
 
 })
 
-app.post('/confirmedcomments', function(req, res) {
+app.post('/confirmedArticleComments', function(req, res) {
 
-	console.log('/confirmedcomments')
+	console.log('/confirmedArticleComments')
 
-	comments.createComment(req.body.parentcomment, req.body.comment, req.body.fk_post, req.body.fk_user, 'N', function(err,
-			rows) {
-		
-		//ok
-		comments.getConfirmedComments(req.body.fk_post, function(err, rows) {
+	articleComments.createComment(req.body.parentcomment, req.body.comment,
+			req.body.fk_post, req.body.fk_user, 'N', function(err, rows) {
 
-			var util = require('util');
+				// ok
+				comments.getConfirmedComments(req.body.fk_post, function(err,
+						rows) {
 
-			console.log(util.inspect(rows, {
-				showHidden : true,
-				depth : null
-			}));
+					var util = require('util');
 
-			res.send(rows);
-		});
+					console.log(util.inspect(rows, {
+						showHidden : true,
+						depth : null
+					}));
+
+					res.send(rows);
+				});
+			});
+
+})
+
+var newsComments = require('./db/newsComments');
+
+app.get('/allNewsComments', function(req, res) {
+	console.log('/allNewsComments')
+
+	newsComments.getAllComments(req.query.id, function(err, rows) {
+
+		var util = require('util');
+
+		console.log(util.inspect(rows, {
+			showHidden : true,
+			depth : null
+		}));
+
+		res.send(rows);
 	});
+})
+
+app.get('/confirmedNewsComments', function(req, res) {
+	console.log('/confirmedNewsComments')
+
+	newsComments.getConfirmedComments(req.query.id, function(err, rows) {
+
+		var util = require('util');
+
+		console.log(util.inspect(rows, {
+			showHidden : true,
+			depth : null
+		}));
+
+		res.send(rows);
+	});
+})
+
+app.post('/allNewsComments', function(req, res) {
+
+	console.log('/post allNewsComments')
+
+	newsComments.createComment(req.body.parentcomment, req.body.comment,
+			req.body.fk_post, req.body.fk_user, 'Y', function(err, rows) {
+
+				// ok
+				newsComments.getAllComments(req.body.fk_post, function(err,
+						rows) {
+					res.send(rows);
+				});
+			});
+
+})
+
+app.post('/confirmedNewsComments', function(req, res) {
+
+	console.log('/confirmedNewsComments')
+
+	newsComments.createComment(req.body.parentcomment, req.body.comment,
+			req.body.fk_post, req.body.fk_user, 'N', function(err, rows) {
+
+				// ok
+				comments.getConfirmedComments(req.body.fk_post, function(err,
+						rows) {
+
+					var util = require('util');
+
+					console.log(util.inspect(rows, {
+						showHidden : true,
+						depth : null
+					}));
+
+					res.send(rows);
+				});
+			});
 
 })
 
@@ -369,7 +636,7 @@ app.post('/schedule', function(req, res) {
 
 	schedules.createSchedule(req.body.title, function(err, rows) {
 		res.send('OK');
-			});
+	});
 
 })
 
@@ -377,10 +644,9 @@ app.post('/deleteSchedule', function(req, res) {
 
 	console.log('/deleteSchedule')
 
-	schedules.deleteSchedule(req.body.id,
-			function(err, rows) {
-				res.send('OK');
-			});
+	schedules.deleteSchedule(req.body.id, function(err, rows) {
+		res.send('OK');
+	});
 
 })
 
@@ -388,12 +654,10 @@ app.put('/schedule', function(req, res) {
 
 	console.log('/schedule')
 
-	schedules.updateSchedule(req.body.id, req.body.title, function(err,
-					rows) {
+	schedules.updateSchedule(req.body.id, req.body.title, function(err, rows) {
 
-
-				res.send('OK');
-			});
+		res.send('OK');
+	});
 })
 
 // todo michal co jesli nic nie znaleziono? send error
@@ -447,9 +711,10 @@ app.post('/event', function(req, res) {
 
 	console.log('/event')
 
-	events.createEvent(req.body.from_date, req.body.to_date, req.body.fk_schedule, req.body.title, 
-			req.body.description, function(err, rows) {
-		res.send('OK');
+	events.createEvent(req.body.from_date, req.body.to_date,
+			req.body.fk_schedule, req.body.title, req.body.description,
+			function(err, rows) {
+				res.send('OK');
 			});
 
 })
@@ -458,10 +723,9 @@ app.post('/deleteEvent', function(req, res) {
 
 	console.log('/deleteSchedule')
 
-	schedules.deleteSchedule(req.body.id,
-			function(err, rows) {
-				res.send('OK');
-			});
+	schedules.deleteSchedule(req.body.id, function(err, rows) {
+		res.send('OK');
+	});
 
 })
 
@@ -469,9 +733,9 @@ app.put('/event', function(req, res) {
 
 	console.log('/event')
 
-	events.updateEvent(req.body.id, req.body.from_date, req.body.to_date, req.body.fk_schedule, 
-			req.body.title, req.body.description, function(err,
-					rows) {
+	events.updateEvent(req.body.id, req.body.from_date, req.body.to_date,
+			req.body.fk_schedule, req.body.title, req.body.description,
+			function(err, rows) {
 				res.send('OK');
 			});
 })
@@ -529,12 +793,11 @@ app.post('/contactMessage', function(req, res) {
 	res.send('OK');
 })
 
-//todo rozpoznawanie rozszerzenia jpg/png itp
+// todo rozpoznawanie rozszerzenia jpg/png itp
 app.get('/profileimage', function(req, res) {
 	console.log('/profileimage')
 	console.log('req.query.id=' + req.query.id)
-	
-	
+
 	// req.params.id
 	res.sendFile(req.query.id + '.jpg', {
 		root : './images/user',
