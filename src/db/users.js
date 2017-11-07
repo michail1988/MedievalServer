@@ -35,6 +35,57 @@ exports.getAll = function(done) {
 					})
 }
 
+exports.getAccepted = function(done) {
+	var values = [ 'Y' ]
+	
+	db
+			.get()
+			.query(
+					'SELECT id, name, surname, email, password, registerdate, university, phone, congressrole, subjectdescription, '
+							+ 'contactcomments, confirmation, privileges FROM MED_USERS where confirmation = ? ',
+							values,
+					function(err, rows) {
+						if (err)
+							return done(err)
+						done(null, rows)
+						console.log('Users selected')
+					})
+}
+
+exports.getNotAccepted = function(done) {
+	var values = [ 'Y' ]
+	
+	db
+			.get()
+			.query(
+					'SELECT id, name, surname, email, password, registerdate, university, phone, congressrole, subjectdescription, '
+							+ 'contactcomments, confirmation, privileges FROM MED_USERS where confirmation != ? ',
+							values,
+					function(err, rows) {
+						if (err)
+							return done(err)
+						done(null, rows)
+						console.log('Users selected')
+					})
+}
+
+exports.getSpeakers = function(done) {
+	var values = [ 'S' ]
+	
+	db
+			.get()
+			.query(
+					'SELECT id, name, surname, email, password, registerdate, university, phone, congressrole, subjectdescription, '
+							+ 'contactcomments, confirmation, privileges FROM MED_USERS where congressrole = ?',
+							values,
+					function(err, rows) {
+						if (err)
+							return done(err)
+						done(null, rows)
+						console.log('Users selected')
+					})
+}
+
 exports.login = function(username, password, done) {
 	var values = [ username, password ]
 

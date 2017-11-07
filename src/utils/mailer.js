@@ -62,3 +62,22 @@ exports.sendMessageEmail = function(name, email, subject, message) {
 		}
 	});
 }
+
+exports.sendAdminMessages = function(name, emails, subject, message) {
+
+	var mailOptions = {
+		from : "michail1988@o2.pl", // todo parametryzacja, administracja
+		to : emails, 
+		subject : subject, // Subject line
+		text : message, // plaintext body
+		html : message
+	}
+
+	transporter.sendMail(mailOptions, function(error, response) {
+		if (error) {
+			console.log(error);
+		} else {
+			console.log("Message sent: " + message);
+		}
+	});
+}

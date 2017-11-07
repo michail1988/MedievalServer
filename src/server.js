@@ -22,10 +22,19 @@ var bodyParser = require('body-parser')
 
 // Tell express to use the body-parser middleware and to not parse extended
 // bodies
-app.use(bodyParser.urlencoded({
-	extended : false
-}))
-app.use(bodyParser.json())
+//app.use(bodyParser.urlencoded({
+//	extended : false,
+//	limit: '50mb'
+//}))
+//app.use(bodyParser.json())
+//
+//app.use(express.bodyParser({limit: '50mb'}));
+
+// dla przesylania contentu worda z p-editor 
+//https://stackoverflow.com/questions/19917401/error-request-entity-too-large
+var bodyParser = require('body-parser');
+app.use(bodyParser.json({limit: '50mb'}));
+app.use(bodyParser.urlencoded({limit: '50mb', extended: true}));
 
 var db = require('./db');
 
@@ -89,10 +98,13 @@ app.post('/login', function(req, res) {
 			console.log('rows=' + rows[0])
 			console.log('Zalogowano uzytkownika: ' + req.body.username)
 
-			res.send(rows[0]);
+			console.log('Znalazlem tyle wierszy=' + rows.length)
+//			res.send(rows[0]);
 			if (rows.length == 1) {
 				var row = rows[0];
 				res.send(rows[0]);
+				
+				console.log('Wyslano.')
 			}
 		}
 
@@ -109,6 +121,31 @@ app.get('/users', function(req, res) {
 		res.send(rows);
 	});
 })
+
+app.get('/acceptedUsers', function(req, res) {
+	console.log('/acceptedUsers')
+
+	users.getAccepted(function(err, rows) {
+		res.send(rows);
+	});
+})
+
+app.get('/notAcceptedUsers', function(req, res) {
+	console.log('/notAcceptedUsers')
+
+	users.getNotAccepted(function(err, rows) {
+		res.send(rows);
+	});
+})
+
+app.get('/speakers', function(req, res) {
+	console.log('/speakers')
+
+	users.getSpeakers(function(err, rows) {
+		res.send(rows);
+	});
+})
+
 
 // todo michal co jesli nic nie znaleziono?
 app.get('/user', function(req, res) {
@@ -788,6 +825,18 @@ app.post('/contactMessage', function(req, res) {
 	// TODO czy dodac do bazy?
 
 	mailer.sendMessageEmail(req.body.name, req.body.email, req.body.subject,
+			req.body.message);
+
+	res.send('OK');
+})
+
+app.post('/adminMessages', function(req, res) {
+
+	console.log('/adminMessages')
+
+	// TODO czy dodac do bazy?
+
+	mailer.sendAdminMessages(req.body.name, req.body.email, req.body.subject,
 			req.body.message);
 
 	res.send('OK');
