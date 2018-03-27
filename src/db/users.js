@@ -168,3 +168,18 @@ exports.rejectUser = function(id, done) {
 						console.log('Pomyslny update tabeli MED_USER.')
 					})
 }
+
+exports.getPassword = function(email, done) {
+	var values = [ email ]
+	
+	db
+			.get()
+			.query(
+					'SELECT password FROM MED_USERS where email = ?',
+							values, function(err, rows) {
+						if (err)
+							return done(err)
+						done(null, rows)
+						console.log('User selected')
+					})
+}

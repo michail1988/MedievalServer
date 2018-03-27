@@ -880,6 +880,36 @@ app.post('/adminMessages', function(req, res) {
 	res.send('OK');
 })
 
+app.post('/forgotPassword', function(req, res) {
+
+	console.log('/forgotPassword')
+
+	console.log('req.body.email=' + req.body.email)
+	
+	
+	var result = users.getPassword(req.body.email, function(
+			err, rows) {
+
+		
+		if (rows == 0) {
+			console.log('Nie znaleziono takiego uzytkownika')
+
+			res.status(400).send({
+				message : 'Nie znaleziono takiego uzytkownika'
+			});
+		} else {
+			console.log('Znaleziono uzytkownika: ' )
+
+			console.log('rows[0].password=' + rows[0].password)
+			
+			console.log('Wysylam do ' + req.body.email + ' haslo '+ rows[0].password)
+			mailer.sendPassword(req.body.email, rows[0].password);
+			
+			res.send('OK');
+		}
+	});	
+})
+
 // todo rozpoznawanie rozszerzenia jpg/png itp
 app.get('/profileimage', function(req, res) {
 	console.log('/profileimage')

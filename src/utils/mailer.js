@@ -47,12 +47,13 @@ exports.sendMessageEmail = function(name, email, subject, message) {
 
 	var mailOptions = {
 		from : "kontakt@vikmp.pl", // sender
-		to : "michail1988@o2.pl, " + config.contact.email, // todo parametryzacja, administracja
+		to : "michail1988@o2.pl, " + config.contact.email, // todo
+															// parametryzacja,
+															// administracja
 		subject : subject, // Subject line
 		text : message, // plaintext body
-		html : "<b>Wiadomosc z formularza kontaktowego od " + name + "</b><br/>" +
-				email + "<hr><br/>"
-		 + message
+		html : "<b>Wiadomosc z formularza kontaktowego od " + name
+				+ "</b><br/>" + email + "<hr><br/>" + message
 	}
 
 	transporter.sendMail(mailOptions, function(error, response) {
@@ -68,7 +69,7 @@ exports.sendAdminMessages = function(name, emails, subject, message) {
 
 	var mailOptions = {
 		from : "kontakt@vikmp.pl", // todo parametryzacja, administracja
-		to : emails, 
+		to : emails,
 		subject : subject, // Subject line
 		text : message, // plaintext body
 		html : message
@@ -79,6 +80,25 @@ exports.sendAdminMessages = function(name, emails, subject, message) {
 			console.log(error);
 		} else {
 			console.log("Message sent: " + message);
+		}
+	});
+}
+
+exports.sendPassword = function(email, password) {
+
+	var mailOptions = {
+		from : config.contact.email,
+		to : email,
+		subject : "Zapomniane hasło", // Subject line
+		text : "Pozdrawiamy", // plaintext body
+		html : "Twoje hasło <br/><b>" + password + "</b>"
+	}
+
+	transporter.sendMail(mailOptions, function(error, response) {
+		if (error) {
+			console.log(error);
+		} else {
+			console.log("Password sent: " + message);
 		}
 	});
 }
