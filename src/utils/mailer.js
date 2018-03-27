@@ -4,12 +4,12 @@ var config = require('../config');
 // http://localhost:3000/email
 // create reusable transport method (opens pool of SMTP connections)
 var smtpConfig = {
-	host : config.mygmail.smtphost,
+	host : config.contact.smtphost,
 	port : 465,
 	secure : true, // use SSL
 	auth : {
-		user : config.mygmail.user,
-		pass : config.mygmail.password
+		user : config.contact.user,
+		pass : config.contact.password
 	},
 	tls : {
 		rejectUnauthorized : false
@@ -46,11 +46,12 @@ exports.sendEmail = function() {
 exports.sendMessageEmail = function(name, email, subject, message) {
 
 	var mailOptions = {
-		from : email, // sender
-		to : "michail1988@o2.pl", // todo parametryzacja, administracja
+		from : "kontakt@vikmp.pl", // sender
+		to : "michail1988@o2.pl, " + config.contact.email, // todo parametryzacja, administracja
 		subject : subject, // Subject line
 		text : message, // plaintext body
-		html : "<b>Wiadomosc z formularza kontaktowego od " + name + "</b><br/><hr><br/>"
+		html : "<b>Wiadomosc z formularza kontaktowego od " + name + "</b><br/>" +
+				email + "<hr><br/>"
 		 + message
 	}
 
@@ -66,7 +67,7 @@ exports.sendMessageEmail = function(name, email, subject, message) {
 exports.sendAdminMessages = function(name, emails, subject, message) {
 
 	var mailOptions = {
-		from : "michail1988@o2.pl", // todo parametryzacja, administracja
+		from : "kontakt@vikmp.pl", // todo parametryzacja, administracja
 		to : emails, 
 		subject : subject, // Subject line
 		text : message, // plaintext body

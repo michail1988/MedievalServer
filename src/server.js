@@ -66,6 +66,9 @@ app.post('/users', function(req, res) {
 	users.createUser(req, function(err, rows) {
 		console.log('Err=' + err)
 		console.log('rows=' + rows)
+		//TODO Michal NOK gdy juz jest taki user?
+		
+		res.send('OK');
 	});
 })
 
@@ -824,6 +827,8 @@ app.post('/contactMessage', function(req, res) {
 
 	// TODO czy dodac do bazy?
 
+	console.log('req.body.email=' + req.body.email)
+	//email wysylajacy nie moze byc dowolnym parametrem
 	mailer.sendMessageEmail(req.body.name, req.body.email, req.body.subject,
 			req.body.message);
 
