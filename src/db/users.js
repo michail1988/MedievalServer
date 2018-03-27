@@ -5,7 +5,8 @@ exports.createUser = function(req, done) {
 	var values = [ req.body.name, req.body.surname, req.body.email,
 			req.body.password, new Date(), req.body.university, req.body.phone,
 			req.body.congressrole, req.body.subjectdescription,
-			req.body.contactcomments, req.body.confirmation, '' ]
+			req.body.contactcomments, null, '' ]
+	//req.body.confirmation
 
 	db
 			.get()
@@ -52,14 +53,29 @@ exports.getAccepted = function(done) {
 					})
 }
 
-exports.getNotAccepted = function(done) {
-	var values = [ 'Y' ]
+exports.getPending = function(done) {
 	
 	db
 			.get()
 			.query(
 					'SELECT id, name, surname, email, password, registerdate, university, phone, congressrole, subjectdescription, '
-							+ 'contactcomments, confirmation, privileges FROM MED_USERS where confirmation != ? ',
+							+ 'contactcomments, confirmation, privileges FROM MED_USERS where confirmation is null ',
+					function(err, rows) {
+						if (err)
+							return done(err)
+						done(null, rows)
+						console.log('Users selected')
+					})
+}
+
+exports.getRejected = function(done) {
+	var values = [ 'N' ]
+	
+	db
+			.get()
+			.query(
+					'SELECT id, name, surname, email, password, registerdate, university, phone, congressrole, subjectdescription, '
+							+ 'contactcomments, confirmation, privileges FROM MED_USERS where confirmation = ? ',
 							values,
 					function(err, rows) {
 						if (err)

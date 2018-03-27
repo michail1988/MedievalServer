@@ -133,10 +133,18 @@ app.get('/acceptedUsers', function(req, res) {
 	});
 })
 
-app.get('/notAcceptedUsers', function(req, res) {
-	console.log('/notAcceptedUsers')
+app.get('/pendingUsers', function(req, res) {
+	console.log('/pendingUsers')
 
-	users.getNotAccepted(function(err, rows) {
+	users.getPending(function(err, rows) {
+		res.send(rows);
+	});
+})
+
+app.get('/rejectedUsers', function(req, res) {
+	console.log('/rejectedUsers')
+
+	users.getRejected(function(err, rows) {
 		res.send(rows);
 	});
 })
