@@ -22,19 +22,24 @@ var bodyParser = require('body-parser')
 
 // Tell express to use the body-parser middleware and to not parse extended
 // bodies
-//app.use(bodyParser.urlencoded({
-//	extended : false,
-//	limit: '50mb'
-//}))
-//app.use(bodyParser.json())
+// app.use(bodyParser.urlencoded({
+// extended : false,
+// limit: '50mb'
+// }))
+// app.use(bodyParser.json())
 //
-//app.use(express.bodyParser({limit: '50mb'}));
+// app.use(express.bodyParser({limit: '50mb'}));
 
-// dla przesylania contentu worda z p-editor 
-//https://stackoverflow.com/questions/19917401/error-request-entity-too-large
+// dla przesylania contentu worda z p-editor
+// https://stackoverflow.com/questions/19917401/error-request-entity-too-large
 var bodyParser = require('body-parser');
-app.use(bodyParser.json({limit: '50mb'}));
-app.use(bodyParser.urlencoded({limit: '50mb', extended: true}));
+app.use(bodyParser.json({
+	limit : '50mb'
+}));
+app.use(bodyParser.urlencoded({
+	limit : '50mb',
+	extended : true
+}));
 
 var db = require('./db');
 
@@ -66,8 +71,8 @@ app.post('/users', function(req, res) {
 	users.createUser(req, function(err, rows) {
 		console.log('Err=' + err)
 		console.log('rows=' + rows)
-		//TODO Michal NOK gdy juz jest taki user?
-		
+		// TODO Michal NOK gdy juz jest taki user?
+
 		res.send('OK');
 	});
 })
@@ -102,11 +107,11 @@ app.post('/login', function(req, res) {
 			console.log('Zalogowano uzytkownika: ' + req.body.username)
 
 			console.log('Znalazlem tyle wierszy=' + rows.length)
-//			res.send(rows[0]);
+			// res.send(rows[0]);
 			if (rows.length == 1) {
 				var row = rows[0];
 				res.send(rows[0]);
-				
+
 				console.log('Wyslano.')
 			}
 		}
@@ -157,6 +162,25 @@ app.get('/speakers', function(req, res) {
 	});
 })
 
+app.post('/acceptUser', function(req, res) {
+
+	console.log('/acceptUser')
+
+	users.acceptUser(req.body.id, function(err, rows) {
+		res.send('OK');
+	});
+
+})
+
+app.post('/rejectUser', function(req, res) {
+
+	console.log('/rejectUser')
+
+	users.rejectUser(req.body.id, function(err, rows) {
+		res.send('OK');
+	});
+
+})
 
 // todo michal co jesli nic nie znaleziono?
 app.get('/user', function(req, res) {
@@ -564,7 +588,8 @@ app.post('/allArticleComments', function(req, res) {
 			req.body.fk_post, req.body.fk_user, 'Y', function(err, rows) {
 
 				// ok
-		articleComments.getAllComments(req.body.fk_post, function(err, rows) {
+				articleComments.getAllComments(req.body.fk_post, function(err,
+						rows) {
 					res.send(rows);
 				});
 			});
@@ -836,7 +861,7 @@ app.post('/contactMessage', function(req, res) {
 	// TODO czy dodac do bazy?
 
 	console.log('req.body.email=' + req.body.email)
-	//email wysylajacy nie moze byc dowolnym parametrem
+	// email wysylajacy nie moze byc dowolnym parametrem
 	mailer.sendMessageEmail(req.body.name, req.body.email, req.body.subject,
 			req.body.message);
 

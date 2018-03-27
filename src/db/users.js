@@ -133,3 +133,38 @@ exports.getUser = function(id, done) {
 						console.log('User selected')
 					})
 }
+
+exports.acceptUser = function(id, done) {
+	var values = [ 'Y', id ]
+
+	db
+			.get()
+			.query(
+					'UPDATE MED_USERS set CONFIRMATION =? where ID = ?',
+					values, function(err, result) {
+						if (err) {
+							console.log('Error' + err)
+							return done(err)
+						}
+							
+						done(null, result)
+
+						console.log('Pomyslny update tabeli MED_USER.')
+					})
+}
+
+exports.rejectUser = function(id, done) {
+	var values = [ 'N', id ]
+
+	db
+			.get()
+			.query(
+					'UPDATE MED_USERS set CONFIRMATION =? where ID = ?',
+					values, function(err, result) {
+						if (err)
+							return done(err)
+						done(null, result)
+
+						console.log('Pomyslny update tabeli MED_USER.')
+					})
+}
