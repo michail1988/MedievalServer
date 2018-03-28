@@ -102,3 +102,43 @@ exports.sendPassword = function(email, password) {
 		}
 	});
 }
+
+exports.sendUserAccepted = function(email) {
+
+	var mailOptions = {
+		from : config.contact.email,
+		to : email,
+		subject : "Zgłoszenie zaakceptowane", // Subject line
+		text : "Pozdrawiamy", // plaintext body
+		html : "Miło nam poinformowac, że Pana/Pani zgłoszenie uczestnictwa w VI Kongresie Mediewistów Polskich zostało <b> zaakceptowane.</b>" +
+				"<br/>"
+			+ "<br/> Można teraz zalogowac się na stronie: ...."
+	}
+
+	transporter.sendMail(mailOptions, function(error, response) {
+		if (error) {
+			console.log(error);
+		} else {
+			console.log("Acceptation mail sent: " + message);
+		}
+	});
+}
+
+exports.sendUserRejected = function(email) {
+
+	var mailOptions = {
+		from : config.contact.email,
+		to : email,
+		subject : "Zgłoszenie nie zostało przyjęte", // Subject line
+		text : "Pozdrawiamy", // plaintext body
+		html : "Niestety musimy poinformowac, że Pana/Pani zgłoszenie nie zostało przyjęte <br/>"
+	}
+
+	transporter.sendMail(mailOptions, function(error, response) {
+		if (error) {
+			console.log(error);
+		} else {
+			console.log("Rejection mail sent: " + message);
+		}
+	});
+}

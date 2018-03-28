@@ -164,10 +164,30 @@ app.get('/speakers', function(req, res) {
 
 app.post('/acceptUser', function(req, res) {
 
-	console.log('/acceptUser')
+	users.getUser(req.body.id, function(err, rows) {
 
-	users.acceptUser(req.body.id, function(err, rows) {
-		res.send('OK');
+		if (rows == 0) {
+			console.log('Nic nie znalazlem.')
+		}
+
+		if (rows) {
+			var util = require('util');
+
+			console.log(util.inspect(rows, {
+				showHidden : true,
+				depth : null
+			}));
+
+			if (rows.length == 1) {
+				
+				var email = rows[0].email;
+				users.acceptUser(req.body.id, function(err, rows) {
+					mailer.sendUserAccepted(email);
+					res.send('OK');
+				});
+			}
+		}
+
 	});
 
 })
@@ -176,9 +196,32 @@ app.post('/rejectUser', function(req, res) {
 
 	console.log('/rejectUser')
 
-	users.rejectUser(req.body.id, function(err, rows) {
-		res.send('OK');
+	users.getUser(req.body.id, function(err, rows) {
+
+		if (rows == 0) {
+			console.log('Nic nie znalazlem.')
+		}
+
+		if (rows) {
+			var util = require('util');
+
+			console.log(util.inspect(rows, {
+				showHidden : true,
+				depth : null
+			}));
+
+			if (rows.length == 1) {
+				var email = rows[0].email;
+				users.rejectUser(req.body.id, function(err, rows) {
+					mailer.sendUserRejected(email);
+					res.send('OK');
+				});
+			}
+		}
+
 	});
+	
+	
 
 })
 

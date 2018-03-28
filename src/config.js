@@ -22,6 +22,6 @@ config.contact = {};
 config.contact.user = 'kontakt@vikmp.pl';
 config.contact.password = 'Kontakt123123';
 config.contact.smtphost= 'labudamichve.nazwa.pl';
-config.contact.email = 'kontakt@vikmp.pl';
+config.contact.email = 'VI Kongres Mediewistów Polskich ✔ <kontakt@vikmp.pl>';
 
 module.exports = config;
