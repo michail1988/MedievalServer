@@ -104,15 +104,18 @@ app.post('/login', function(req, res) {
 			});
 		} else {
 			console.log('rows=' + rows[0])
-			console.log('Zalogowano uzytkownika: ' + req.body.username)
 
-			console.log('Znalazlem tyle wierszy=' + rows.length)
-			// res.send(rows[0]);
-			if (rows.length == 1) {
+			console.log('rows[0].confirmation=' + rows[0].confirmation)
+			if (rows[0].confirmation === 'Y') {
+				console.log('Zalogowano uzytkownika: ' + req.body.username)
+
 				var row = rows[0];
 				res.send(rows[0]);
+			} else {
+				res.status(401).send({
+					message : 'User not confirmed, without login rights.'
+				});
 
-				console.log('Wyslano.')
 			}
 		}
 
@@ -179,7 +182,7 @@ app.post('/acceptUser', function(req, res) {
 			}));
 
 			if (rows.length == 1) {
-				
+
 				var email = rows[0].email;
 				users.acceptUser(req.body.id, function(err, rows) {
 					mailer.sendUserAccepted(email);
@@ -220,8 +223,6 @@ app.post('/rejectUser', function(req, res) {
 		}
 
 	});
-	
-	
 
 })
 
@@ -928,12 +929,9 @@ app.post('/forgotPassword', function(req, res) {
 	console.log('/forgotPassword')
 
 	console.log('req.body.email=' + req.body.email)
-	
-	
-	var result = users.getPassword(req.body.email, function(
-			err, rows) {
 
-		
+	var result = users.getPassword(req.body.email, function(err, rows) {
+
 		if (rows == 0) {
 			console.log('Nie znaleziono takiego uzytkownika')
 
@@ -941,16 +939,17 @@ app.post('/forgotPassword', function(req, res) {
 				message : 'Nie znaleziono takiego uzytkownika'
 			});
 		} else {
-			console.log('Znaleziono uzytkownika: ' )
+			console.log('Znaleziono uzytkownika: ')
 
 			console.log('rows[0].password=' + rows[0].password)
-			
-			console.log('Wysylam do ' + req.body.email + ' haslo '+ rows[0].password)
+
+			console.log('Wysylam do ' + req.body.email + ' haslo '
+					+ rows[0].password)
 			mailer.sendPassword(req.body.email, rows[0].password);
-			
+
 			res.send('OK');
 		}
-	});	
+	});
 })
 
 // todo rozpoznawanie rozszerzenia jpg/png itp
