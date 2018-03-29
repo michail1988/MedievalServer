@@ -35,14 +35,11 @@ exports.getAll = function(done) {
 					})
 }
 
-exports.updateUser = function(name, surname, email, password, university,
-		phone, congressrole, subjectdescription, contactcomments, confirmation,
-		privileges, summary, abstract, paper_acceptation, payment,
-		academic_title, fk_editor, id, done) {
-	var values = [ name, surname, email, password, university, phone,
-			congressrole, subjectdescription, contactcomments, confirmation,
-			privileges, summary, abstract, paper_acceptation, payment,
-			academic_title, fk_editor, id ]
+exports.updateUser = function(body, done) {
+	var values = [ body.name, body.surname, body.email, body.password, body.university, body.phone,
+	               body.congressrole, body.subjectdescription, body.contactcomments, body.confirmation,
+	               body.privileges, body.summary, body.abstract, body.paper_acceptation, body.payment,
+	               body.academic_title, body.fk_editor, body.id ]
 
 	db
 			.get()

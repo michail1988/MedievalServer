@@ -137,10 +137,7 @@ app.put('/users', function(req, res) {
 
 	console.log('/users')
 	
-	users.updateUser(req.body.name, req.body.surname, req.body.email, req.body.password, req.body.registerdate, 
-			req.body.university, req.body.phone, req.body.congressrole, req.body.subjectdescription, 
-			req.body.contactcomments, req.body.confirmation, req.body.privileges, req.body.summary, req.body.abstract,
-			req.body.paper_acceptation, req.body.payment, req.body.academic_title, req.body.fk_editor, req.body.id, function(err,
+	users.updateUser(req.body, function(err,
 					rows) {
 
 				console.log('Err=' + err)
