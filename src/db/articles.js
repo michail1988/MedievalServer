@@ -118,7 +118,7 @@ exports.getArticleHistory = function(fk_article, done) {
 	db
 			.get()
 			.query(
-					'SELECT author, title, content, headline, username as editor, modified_date FROM MED_ARTICLES_H, MED_ADMINS a where fk_article = ? and FK_EDITOR = a.ID order by modified_date desc',
+					'SELECT author, title, content, headline, username as editor, modified_date FROM MED_ARTICLES_H, MED_USERS a where fk_article = ? and FK_EDITOR = a.ID order by modified_date desc',
 					values, function(err, rows) {
 						if (err)
 							return done(err)

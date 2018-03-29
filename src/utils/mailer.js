@@ -68,7 +68,7 @@ exports.sendMessageEmail = function(name, email, subject, message) {
 exports.sendAdminMessages = function(name, emails, subject, message) {
 
 	var mailOptions = {
-		from : "kontakt@vikmp.pl", // todo parametryzacja, administracja
+		from : config.contact.email, // todo parametryzacja, administracja
 		to : emails,
 		subject : subject, // Subject line
 		text : message, // plaintext body
