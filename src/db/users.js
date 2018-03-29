@@ -56,6 +56,22 @@ exports.updateUser = function(body, done) {
 					})
 }
 
+exports.updatePassword = function(body, done) {
+	var values = [ body.password, body.fk_editor, body.id ]
+
+	db
+			.get()
+			.query(
+					'UPDATE MED_USERS set password=?, FK_EDITOR=? where ID = ?',
+					values, function(err, result) {
+						if (err)
+							return done(err)
+						done(null, result)
+
+						console.log('Pomyslny update do tabeli MED_USERS.')
+					})
+}
+
 exports.getAccepted = function(done) {
 	var values = [ 'Y' ]
 

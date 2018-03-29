@@ -136,13 +136,25 @@ app.get('/users', function(req, res) {
 app.put('/users', function(req, res) {
 
 	console.log('/users')
-	
-	users.updateUser(req.body, function(err,
-					rows) {
 
-				console.log('Err=' + err)
-				console.log('rows=' + rows)
-			});
+	users.updateUser(req.body, function(err, rows) {
+
+		res.send('OK');
+		console.log('Err=' + err)
+		console.log('rows=' + rows)
+	});
+
+})
+
+app.put('/userPassword', function(req, res) {
+
+	console.log('/userPassword')
+
+	users.updatePassword(req.body, function(err, rows) {
+		res.send('OK');
+		console.log('Err=' + err)
+		console.log('rows=' + rows)
+	});
 
 })
 
