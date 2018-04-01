@@ -278,6 +278,23 @@ app.get('/user', function(req, res) {
 	});
 })
 
+app.get('/userHistory', function(req, res) {
+	console.log('/userHistory')
+
+	console.log('/fk_user=' + req.query.id)
+	users.getUserHistory(req.query.id, function(err, rows) {
+
+		var util = require('util');
+
+		console.log(util.inspect(rows, {
+			showHidden : true,
+			depth : null
+		}));
+
+		res.send(rows);
+	});
+})
+
 var admins = require('./db/admins');
 
 var articles = require('./db/articles');
