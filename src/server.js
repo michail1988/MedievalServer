@@ -2,6 +2,7 @@ var express = require('express');
 var app = express();
 var cors = require('cors');
 var util = require('util');
+var config = require('./config');
 
 var originsWhitelist = [ 'http://localhost:4200', // this is my front-end url
 // for development
@@ -210,7 +211,11 @@ app.post('/acceptUser', function(req, res) {
 
 				var email = rows[0].email;
 				users.acceptUser(req.body.id, function(err, rows) {
-					mailer.sendUserAccepted(email);
+
+					if (config.mailEnabled === true) {
+						mailer.sendUserAccepted(email);
+					}
+
 					res.send('OK');
 				});
 			}
@@ -241,7 +246,11 @@ app.post('/rejectUser', function(req, res) {
 			if (rows.length == 1) {
 				var email = rows[0].email;
 				users.rejectUser(req.body.id, function(err, rows) {
-					mailer.sendUserRejected(email);
+					
+					if (config.mailEnabled === true) {
+						mailer.sendUserRejected(email);
+					}					
+					
 					res.send('OK');
 				});
 			}
@@ -937,7 +946,9 @@ var mailer = require('./utils/mailer');
 app.get('/email', function(req, res) {
 	console.log('/email')
 
-	mailer.sendEmail();
+	if (config.mailEnabled === true) {
+		mailer.sendEmail();
+	}
 })
 
 app.post('/contactMessage', function(req, res) {
@@ -948,8 +959,11 @@ app.post('/contactMessage', function(req, res) {
 
 	console.log('req.body.email=' + req.body.email)
 	// email wysylajacy nie moze byc dowolnym parametrem
-	mailer.sendMessageEmail(req.body.name, req.body.email, req.body.subject,
-			req.body.message);
+
+	if (config.mailEnabled === true) {
+		mailer.sendMessageEmail(req.body.name, req.body.email,
+				req.body.subject, req.body.message);
+	}
 
 	res.send('OK');
 })
@@ -960,8 +974,10 @@ app.post('/adminMessages', function(req, res) {
 
 	// TODO czy dodac do bazy?
 
-	mailer.sendAdminMessages(req.body.name, req.body.email, req.body.subject,
-			req.body.message);
+	if (config.mailEnabled === true) {
+		mailer.sendAdminMessages(req.body.name, req.body.email,
+				req.body.subject, req.body.message);
+	}
 
 	res.send('OK');
 })
@@ -987,8 +1003,11 @@ app.post('/forgotPassword', function(req, res) {
 
 			console.log('Wysylam do ' + req.body.email + ' haslo '
 					+ rows[0].password)
-			mailer.sendPassword(req.body.email, rows[0].password);
 
+			if (config.mailEnabled === true) {
+				mailer.sendPassword(req.body.email, rows[0].password);
+			}
+			
 			res.send('OK');
 		}
 	});
