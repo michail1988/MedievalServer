@@ -214,6 +214,18 @@ exports.getPassword = function(email, done) {
 			})
 }
 
+exports.getId = function(email, done) {
+	var values = [ email ]
+
+	db.get().query('SELECT id FROM MED_USERS where email = ?', values,
+			function(err, rows) {
+				if (err)
+					return done(err)
+				done(null, rows)
+				console.log('User selected')
+			})
+}
+
 exports.getUserHistory = function(fk_user, done) {
 
 	var values = [ fk_user ]

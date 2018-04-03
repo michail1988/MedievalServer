@@ -68,14 +68,33 @@ app.post('/enrolments', function(req, res) {
 var users = require('./db/users');
 app.post('/users', function(req, res) {
 	console.log('/users')
+	console.log('Próba rejestracji: ' + req.body.email)
 
-	users.createUser(req, function(err, rows) {
-		console.log('Err=' + err)
-		console.log('rows=' + rows)
-		// TODO Michal NOK gdy juz jest taki user?
+	var result = users.getId(req.body.email, function(err, rows) {
 
-		res.send('OK');
+		if (rows == 0) {
+			console.log('Nie znaleziono innego uzytkownika o tym samym emailu.')
+			users.createUser(req, function(err, rows) {
+				console.log('Err=' + err)
+				console.log('rows=' + rows)
+
+				res.send('OK');
+			});
+			
+		} else {
+			console.log('Znaleziono uzytkownika: ')
+			res.status(401).send({
+				message : 'Istnieje juz uzytkownik o podanym adresie email.'
+			});
+		}
 	});
+	
+	
+	
+	
+	
+	
+	
 })
 
 app.post('/login', function(req, res) {
@@ -246,11 +265,11 @@ app.post('/rejectUser', function(req, res) {
 			if (rows.length == 1) {
 				var email = rows[0].email;
 				users.rejectUser(req.body.id, function(err, rows) {
-					
+
 					if (config.mailEnabled === true) {
 						mailer.sendUserRejected(email);
-					}					
-					
+					}
+
 					res.send('OK');
 				});
 			}
@@ -998,16 +1017,14 @@ app.post('/forgotPassword', function(req, res) {
 			});
 		} else {
 			console.log('Znaleziono uzytkownika: ')
-
-			console.log('rows[0].password=' + rows[0].password)
-
-			console.log('Wysylam do ' + req.body.email + ' haslo '
-					+ rows[0].password)
-
+			
 			if (config.mailEnabled === true) {
+				console.log('Wysylam do ' + req.body.email + ' haslo '
+						+ rows[0].password)
+						
 				mailer.sendPassword(req.body.email, rows[0].password);
 			}
-			
+
 			res.send('OK');
 		}
 	});
