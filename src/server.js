@@ -4,7 +4,13 @@ var cors = require('cors');
 var util = require('util');
 var config = require('./config');
 
-var originsWhitelist = [ 'http://localhost:4200', 'http://77.55.218.181:4200', // this is my front-end url
+var mailer = require('./utils/mailer');
+
+var originsWhitelist = [ 'http://localhost:4200', 'http://77.55.218.181:4200', // this
+																				// is
+																				// my
+																				// front-end
+																				// url
 // for development
 'http://www.myproductionurl.com' ];
 
@@ -77,9 +83,13 @@ app.post('/users', function(req, res) {
 				console.log('Err=' + err)
 				console.log('rows=' + rows)
 
+				if (config.mailEnabled === true) {
+					mailer.sendWelcomeEmail(req.body.email);
+				}
+
 				res.send('OK');
 			});
-			
+
 		} else {
 			console.log('Znaleziono uzytkownika: ')
 			res.status(401).send({
@@ -87,13 +97,7 @@ app.post('/users', function(req, res) {
 			});
 		}
 	});
-	
-	
-	
-	
-	
-	
-	
+
 })
 
 app.post('/login', function(req, res) {
@@ -959,8 +963,6 @@ app.get('/event', function(req, res) {
 
 var config = require('./config');
 
-var mailer = require('./utils/mailer');
-
 app.get('/email', function(req, res) {
 	console.log('/email')
 
@@ -1016,11 +1018,11 @@ app.post('/forgotPassword', function(req, res) {
 			});
 		} else {
 			console.log('Znaleziono uzytkownika: ')
-			
+
 			if (config.mailEnabled === true) {
 				console.log('Wysylam do ' + req.body.email + ' haslo '
 						+ rows[0].password)
-						
+
 				mailer.sendPassword(req.body.email, rows[0].password);
 			}
 

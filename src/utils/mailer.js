@@ -84,14 +84,41 @@ exports.sendAdminMessages = function(name, emails, subject, message) {
 	});
 }
 
+exports.sendWelcomeEmail = function(email) {
+	var mailOptions = {
+			from : config.contact.email,
+			to : email,
+			subject : "Rejestracja na portalu www.vikmp.pl", // Subject line
+			text : "Rejestracja na portalu www.vikmp.pl", // plaintext body
+			html : "Szanowna Pani/Szanowny Panie, <br/><br/> " +
+			        "Dziękujemy za przesłanie zgłoszenia uczestnictwa w VI Kongresie Mediewistów Polskich.<br/><br/>" +
+			        "O akceptacji Państwa wniosku poinformujemy drogą mailową. " + 
+			        "Po jej otrzymaniu będzie możliwe zalogowanie się na swoje konto na stronie: <a href=\"www.vikmp.pl\">www.vikmp.pl</a> za pomocą zdefiniowanego przez Państwa hasła i adresu email.<br/><br/>" +
+				"Z wyrazami szacunku, <br/>" +
+				"Komitet organizacyjny"
+		}
+
+		transporter.sendMail(mailOptions, function(error, response) {
+			if (error) {
+				console.log(error);
+			} else {
+				console.log("Acceptation mail sent: " + message);
+			}
+		});
+}
+
 exports.sendPassword = function(email, password) {
 
 	var mailOptions = {
 		from : config.contact.email,
 		to : email,
 		subject : "Zapomniane hasło", // Subject line
-		text : "Pozdrawiamy", // plaintext body
-		html : "Twoje hasło <br/><b>" + password + "</b>"
+		text : "Zapomniane hasło", // plaintext body
+		html : "Szanowna Pani/Szanowny Panie, <br/><br/> " +
+		        "Przypominamy hasło: <b>" + password + "</b>" +
+		        "<br/><br/>" +
+			"Z wyrazami szacunku, <br/>" +
+			"Komitet organizacyjny"
 	}
 
 	transporter.sendMail(mailOptions, function(error, response) {
@@ -109,10 +136,13 @@ exports.sendUserAccepted = function(email) {
 		from : config.contact.email,
 		to : email,
 		subject : "Zgłoszenie zaakceptowane", // Subject line
-		text : "Pozdrawiamy", // plaintext body
-		html : "Miło nam poinformowac, że Pana/Pani zgłoszenie uczestnictwa w VI Kongresie Mediewistów Polskich zostało <b> zaakceptowane.</b>" +
-				"<br/>"
-			+ "<br/> Można teraz zalogowac się na stronie: ...."
+		text : "Zgłoszenie zaakceptowane", // plaintext body
+		html : "Drogi uczestniku, <br/> " +
+		        "miło nam poinformować, że Pani/Pana zgłoszenie uczestnictwa w VI Kongresie Mediewistów Polskich zostało <b> zaakceptowane.</b> <br/><br/>" +
+				"Używając zdefiniowanego podczas rejestracji loginu i hasła istnieje już możliwość zalogowania się na swoje konto na stronie: <a href=\"www.vikmp.pl\">www.vikmp.pl</a><br/>"
+			+ "Prosimy teraz o uzupełnienie pozostałych danych oraz dokonanie opłaty konferencyjnej. <br/><br/>" +
+			"Z wyrazami szacunku, <br/>" +
+			"Komitet organizacyjny"
 	}
 
 	transporter.sendMail(mailOptions, function(error, response) {
@@ -130,8 +160,11 @@ exports.sendUserRejected = function(email) {
 		from : config.contact.email,
 		to : email,
 		subject : "Zgłoszenie nie zostało przyjęte", // Subject line
-		text : "Pozdrawiamy", // plaintext body
-		html : "Niestety musimy poinformowac, że Pana/Pani zgłoszenie nie zostało przyjęte <br/>"
+		text : "Zgłoszenie nie zostało przyjęte", // plaintext body
+		html : "Szanowna Pani/Szanowny Panie, <br/><br/> " +
+				"z przykrością informujemy, iż Państwa zgłoszenie uczestnictwa w VI Kongresie Mediewistów Polskich <b>nie zostało</b> zaakceptowane. <br/><br/>" +
+				"Z wyrazami szacunku, <br/>" +
+				"Komitet organizacyjny"
 	}
 
 	transporter.sendMail(mailOptions, function(error, response) {
