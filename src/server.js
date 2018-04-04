@@ -4,7 +4,7 @@ var cors = require('cors');
 var util = require('util');
 var config = require('./config');
 
-var originsWhitelist = [ 'http://localhost:4200', // this is my front-end url
+var originsWhitelist = [ 'http://localhost:4200', 'http://77.55.218.181:4200', // this is my front-end url
 // for development
 'http://www.myproductionurl.com' ];
 
@@ -73,7 +73,6 @@ app.post('/users', function(req, res) {
 	var result = users.getId(req.body.email, function(err, rows) {
 
 		if (rows == 0) {
-			console.log('Nie znaleziono innego uzytkownika o tym samym emailu.')
 			users.createUser(req, function(err, rows) {
 				console.log('Err=' + err)
 				console.log('rows=' + rows)
