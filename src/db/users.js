@@ -38,7 +38,7 @@ exports.getAll = function(done) {
 exports.updateUser = function(body, done) {
 	var values = [ body.name, body.surname, body.email, body.password, body.university, body.phone,
 	               body.congressrole, body.subjectdescription, body.contactcomments, body.confirmation,
-	               body.privileges, body.summary, body.abstract, body.paper_acceptation, body.payment,
+	               body.privileges, 'null', 'null', body.paper_acceptation, body.payment,
 	               body.academic_title, body.fk_editor, body.id ]
 
 	db
