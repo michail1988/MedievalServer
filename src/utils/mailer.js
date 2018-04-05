@@ -154,6 +154,29 @@ exports.sendUserAccepted = function(email) {
 	});
 }
 
+exports.sendPaymentAccepted = function(email) {
+
+	var mailOptions = {
+		from : config.contact.email,
+		to : email,
+		subject : "Dziękujemy za dokonanie opłaty", // Subject line
+		text : "Dziękujemy za dokonanie opłaty", // plaintext body
+		html : "Drogi uczestniku, <br/> " +
+		        "dziękujemy za opłacenie uczestnictwa w VI Kongresie Mediewistów Polskich. <br/><br/>" +
+			"Do zobaczenia we Wrocławiu! <br/><br/>" +
+			"Z wyrazami szacunku, <br/>" +
+			"Komitet organizacyjny"
+	}
+
+	transporter.sendMail(mailOptions, function(error, response) {
+		if (error) {
+			console.log(error);
+		} else {
+			console.log("Acceptation mail sent: " + message);
+		}
+	});
+}
+
 exports.sendUserRejected = function(email) {
 
 	var mailOptions = {

@@ -26,7 +26,7 @@ exports.getAll = function(done) {
 			.get()
 			.query(
 					'SELECT id, name, surname, email, password, registerdate, university, phone, congressrole, subjectdescription, '
-							+ 'contactcomments, confirmation, privileges, summary, abstract, paper_acceptation, payment, academic_title '
+							+ 'contactcomments, confirmation, privileges, summary, abstract, paper_acceptation, payment, payment_accepted, academic_title '
 							+ ' FROM MED_USERS', function(err, rows) {
 						if (err)
 							return done(err)
@@ -38,7 +38,7 @@ exports.getAll = function(done) {
 exports.updateUser = function(body, done) {
 	var values = [ body.name, body.surname, body.email, body.password, body.university, body.phone,
 	               body.congressrole, body.subjectdescription, body.contactcomments, body.confirmation,
-	               body.privileges, 'null', 'null', body.paper_acceptation, body.payment,
+	               body.privileges, 'null', 'null', body.paper_acceptation, body.payment, body.payment_accepted,
 	               body.academic_title, body.fk_editor, body.id ]
 
 	db
@@ -46,7 +46,7 @@ exports.updateUser = function(body, done) {
 			.query(
 					'UPDATE MED_USERS set name =?, surname=?, email=?, password=?, university=?, phone=?, congressrole=?, '
 							+ ' subjectdescription=?, contactcomments=?, confirmation=?, privileges=?, summary=?, abstract=?, paper_acceptation=?, '
-							+ 'payment=?, academic_title=?, FK_EDITOR=? where ID = ?',
+							+ 'payment=?, payment_accepted=?, academic_title=?, FK_EDITOR=? where ID = ?',
 					values, function(err, result) {
 						if (err)
 							return done(err)
@@ -79,7 +79,7 @@ exports.getAccepted = function(done) {
 			.get()
 			.query(
 					'SELECT id, name, surname, email, password, registerdate, university, phone, congressrole, subjectdescription, '
-							+ 'contactcomments, confirmation, privileges, summary, abstract, paper_acceptation, payment, academic_title '
+							+ 'contactcomments, confirmation, privileges, summary, abstract, paper_acceptation, payment, payment_accepted, academic_title '
 							+ ' FROM MED_USERS where confirmation = ? ',
 					values, function(err, rows) {
 						if (err)
@@ -95,7 +95,7 @@ exports.getPending = function(done) {
 			.get()
 			.query(
 					'SELECT id, name, surname, email, password, registerdate, university, phone, congressrole, subjectdescription, '
-							+ 'contactcomments, confirmation, privileges, summary, abstract, paper_acceptation, payment, academic_title '
+							+ 'contactcomments, confirmation, privileges, summary, abstract, paper_acceptation, payment, payment_accepted, academic_title '
 							+ ' FROM MED_USERS where confirmation is null ',
 					function(err, rows) {
 						if (err)
@@ -112,7 +112,7 @@ exports.getRejected = function(done) {
 			.get()
 			.query(
 					'SELECT id, name, surname, email, password, registerdate, university, phone, congressrole, subjectdescription, '
-							+ 'contactcomments, confirmation, privileges, summary, abstract, paper_acceptation, payment, academic_title '
+							+ 'contactcomments, confirmation, privileges, summary, abstract, paper_acceptation, payment, payment_accepted, academic_title '
 							+ ' FROM MED_USERS where confirmation = ? ',
 					values, function(err, rows) {
 						if (err)
@@ -129,7 +129,7 @@ exports.getSpeakers = function(done) {
 			.get()
 			.query(
 					'SELECT id, name, surname, email, password, registerdate, university, phone, congressrole, subjectdescription, '
-							+ 'contactcomments, confirmation, privileges, summary, abstract, paper_acceptation, payment, academic_title '
+							+ 'contactcomments, confirmation, privileges, summary, abstract, paper_acceptation, payment, payment_accepted, academic_title '
 							+ ' FROM MED_USERS where congressrole = ?', values,
 					function(err, rows) {
 						if (err)
@@ -146,7 +146,7 @@ exports.login = function(username, password, done) {
 			.get()
 			.query(
 					'SELECT id, name, surname, registerdate, email, password, university, phone, congressrole, subjectdescription, '
-							+ 'contactcomments, confirmation, privileges, summary, abstract, paper_acceptation, payment, academic_title '
+							+ 'contactcomments, confirmation, privileges, summary, abstract, paper_acceptation, payment, payment_accepted, academic_title '
 							+ ' FROM MED_USERS where email = ? and password = ?',
 					values, function(err, rows) {
 						if (err)
@@ -163,7 +163,7 @@ exports.getUser = function(id, done) {
 			.get()
 			.query(
 					'SELECT id, name, surname, email, password, registerdate, university, phone, congressrole, subjectdescription, '
-							+ 'contactcomments, confirmation, privileges, summary, abstract, paper_acceptation, payment, academic_title '
+							+ 'contactcomments, confirmation, privileges, summary, abstract, paper_acceptation, payment, payment_accepted, academic_title '
 							+ ' FROM MED_USERS where id = ?', values,
 					function(err, rows) {
 						if (err)
@@ -202,6 +202,35 @@ exports.rejectUser = function(id, done) {
 			})
 }
 
+exports.acceptPayment = function(id, done) {
+	var values = [ 'Y', id ]
+
+	db.get().query('UPDATE MED_USERS set PAYMENT_ACCEPTED =? where ID = ?', values,
+			function(err, result) {
+				if (err) {
+					console.log('Error' + err)
+					return done(err)
+				}
+
+				done(null, result)
+
+				console.log('Pomyslny update tabeli MED_USER.')
+			})
+}
+
+exports.rejectPayment = function(id, done) {
+	var values = [ 'N', id ]
+
+	db.get().query('UPDATE MED_USERS set PAYMENT_ACCEPTED =? where ID = ?', values,
+			function(err, result) {
+				if (err)
+					return done(err)
+				done(null, result)
+
+				console.log('Pomyslny update tabeli MED_USERS.')
+			})
+}
+
 exports.getPassword = function(email, done) {
 	var values = [ email ]
 
@@ -226,6 +255,40 @@ exports.getId = function(email, done) {
 			})
 }
 
+exports.getAcceptedPayment = function(done) {
+	var values = [ 'Y' ]
+
+	db
+			.get()
+			.query(
+					'SELECT id, name, surname, email, password, registerdate, university, phone, congressrole, subjectdescription, '
+							+ 'contactcomments, confirmation, privileges, summary, abstract, paper_acceptation, payment, payment_accepted, academic_title '
+							+ ' FROM MED_USERS where payment_accepted = ? ',
+					values, function(err, rows) {
+						if (err)
+							return done(err)
+						done(null, rows)
+						console.log('Users selected')
+					})
+}
+
+exports.getPendingPayment = function(done) {
+	var values = [ 'Y' ]
+
+	db
+			.get()
+			.query(
+					'SELECT id, name, surname, email, password, registerdate, university, phone, congressrole, subjectdescription, '
+							+ 'contactcomments, confirmation, privileges, summary, abstract, paper_acceptation, payment, payment_accepted, academic_title '
+							+ ' FROM MED_USERS where payment_accepted <> ? or payment_accepted is null ',
+					values, function(err, rows) {
+						if (err)
+							return done(err)
+						done(null, rows)
+						console.log('Users selected')
+					})
+}
+
 exports.getUserHistory = function(fk_user, done) {
 
 	var values = [ fk_user ]
@@ -233,7 +296,7 @@ exports.getUserHistory = function(fk_user, done) {
 			.get()
 			.query(
 					'SELECT h.name, h.surname, h.email, h.password, h.registerdate, h.university, h.phone, h.congressrole, h.subjectdescription, '
-							+ 'h.contactcomments, h.confirmation, h.privileges, h.summary, h.abstract, h.paper_acceptation, h.payment, ' 
+							+ 'h.contactcomments, h.confirmation, h.privileges, h.summary, h.abstract, h.paper_acceptation, h.payment, h.payment_accepted, ' 
 							+ 'h.academic_title, CONCAT(u.name, " ", u.SURNAME) as editor, modified_date  FROM MED_USERS_H h, MED_USERS u '
 							+ 'where fk_user = ? and h.FK_EDITOR = u.ID order by modified_date desc',
 					values, function(err, rows) {

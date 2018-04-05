@@ -257,6 +257,22 @@ app.get('/pendingUsers', function(req, res) {
 	});
 })
 
+app.get('/acceptedPayment', function(req, res) {
+	console.log('/acceptedPayment')
+
+	users.getAcceptedPayment(function(err, rows) {
+		res.send(rows);
+	});
+})
+
+app.get('/pendingPayment', function(req, res) {
+	console.log('/pendingPayment')
+
+	users.getPendingPayment(function(err, rows) {
+		res.send(rows);
+	});
+})
+
 app.get('/rejectedUsers', function(req, res) {
 	console.log('/rejectedUsers')
 
@@ -331,6 +347,75 @@ app.post('/rejectUser', function(req, res) {
 
 					if (config.mailEnabled === true) {
 						mailer.sendUserRejected(email);
+					}
+
+					res.send('OK');
+				});
+			}
+		}
+
+	});
+
+})
+
+app.post('/acceptPayment', function(req, res) {
+
+	users.getUser(req.body.id, function(err, rows) {
+
+		if (rows == 0) {
+			console.log('Nic nie znalazlem.')
+		}
+
+		if (rows) {
+			var util = require('util');
+
+			console.log(util.inspect(rows, {
+				showHidden : true,
+				depth : null
+			}));
+
+			if (rows.length == 1) {
+
+				var email = rows[0].email;
+				users.acceptPayment(req.body.id, function(err, rows) {
+
+					if (config.mailEnabled === true) {
+						mailer.sendPaymentAccepted(email);
+					}
+
+					res.send('OK');
+				});
+			}
+		}
+
+	});
+
+})
+
+app.post('/rejectPayment', function(req, res) {
+
+	console.log('/rejectPayment')
+
+	users.getUser(req.body.id, function(err, rows) {
+
+		if (rows == 0) {
+			console.log('Nic nie znalazlem.')
+		}
+
+		if (rows) {
+			var util = require('util');
+
+			console.log(util.inspect(rows, {
+				showHidden : true,
+				depth : null
+			}));
+
+			if (rows.length == 1) {
+				var email = rows[0].email;
+				users.rejectPayment(req.body.id, function(err, rows) {
+
+					if (config.mailEnabled === true) {
+						//mailer.sendPaymentRejected(email);
 					}
 
 					res.send('OK');
