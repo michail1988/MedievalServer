@@ -162,9 +162,39 @@ app.put('/users', function(req, res) {
 
 	users.updateUser(req.body, function(err, rows) {
 
-		res.send('OK');
 		console.log('Err=' + err)
 		console.log('rows=' + rows)
+		
+		users.getUser(req.body.id, function(err, rows) {
+
+			if (rows == 0) {
+				console.log('Nic nie znalazlem.')
+			}
+
+			if (rows) {
+				var util = require('util');
+
+				console.log(util.inspect(rows, {
+					showHidden : true,
+					depth : null
+				}));
+
+				if (rows.length == 1) {
+					var row = rows[0];
+					res.send(rows[0]);
+				}
+			} else {
+				//TODO Michal, obsluzyc, dodac blad przy zmianie emailu na uzywany
+				res.status(401).send({
+					message : 'Blad przy zapisie osoby'
+				});
+			}
+			
+			
+
+		});
+		
+		
 	});
 
 })
