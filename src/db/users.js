@@ -306,7 +306,7 @@ exports.getUserHistory = function(fk_user, done) {
 			.query(
 					'SELECT h.name, h.surname, h.email, h.password, h.registerdate, h.university, h.phone, h.congressrole, h.subjectdescription, '
 							+ 'h.contactcomments, h.confirmation, h.privileges, h.summary, h.abstract, h.paper_acceptation, h.payment, h.payment_accepted, ' 
-							+ 'h.academic_title, h.academic_status, h.master, h.engineer CONCAT(u.name, " ", u.SURNAME) as editor, modified_date  FROM MED_USERS_H h, MED_USERS u '
+							+ 'h.academic_title, h.academic_status, h.master, h.engineer, CONCAT(u.name, " ", u.SURNAME) as editor, modified_date  FROM MED_USERS_H h, MED_USERS u '
 							+ 'where fk_user = ? and h.FK_EDITOR = u.ID order by modified_date desc',
 					values, function(err, rows) {
 						if (err)
