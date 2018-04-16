@@ -16,7 +16,7 @@ var smtpConfig = {
 	}
 };
 var transporter = nodemailer.createTransport(smtpConfig);
-
+//email testowy, nie podpiety
 exports.sendEmail = function() {
 	// setup e-mail data with unicode symbols
 	var mailOptions = {
@@ -46,14 +46,12 @@ exports.sendEmail = function() {
 exports.sendMessageEmail = function(name, email, subject, message) {
 
 	var mailOptions = {
-		from : "kontakt@vikmp.pl", // sender
-		to : "michail1988@o2.pl, " + config.contact.email, // todo
+		from : config.contact.email, // sender
+		to : config.contact.email, // todo
 															// parametryzacja,
 															// administracja
 		subject : subject, // Subject line
-		text : message, // plaintext body
-		html : "<b>Wiadomosc z formularza kontaktowego od " + name
-				+ "</b><br/>" + email + "<hr><br/>" + message
+		text : message
 	}
 
 	transporter.sendMail(mailOptions, function(error, response) {
@@ -71,8 +69,7 @@ exports.sendAdminMessages = function(name, emails, subject, message) {
 		from : config.contact.email, // todo parametryzacja, administracja
 		to : emails,
 		subject : subject, // Subject line
-		text : message, // plaintext body
-		html : message
+		text : message
 	}
 
 	transporter.sendMail(mailOptions, function(error, response) {
