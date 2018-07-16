@@ -1254,7 +1254,7 @@ app.post('/workshop', function(req, res) {
 
 	console.log('/workshop')
 	workshops.createWorkshop(req.body.title, req.body.author, req.body.content,
-			req.body.contact, req.body.place, req.body.status, req.body.fk_editor, function(err, rows) {
+			req.body.contact, req.body.place, req.body.date, req.body.status, req.body.fk_editor, function(err, rows) {
 
 			});
 
@@ -1277,9 +1277,10 @@ app.put('/workshop', function(req, res) {
 
 	console.log('req.body.title=' + req.body.title)
 	console.log('req.body.place=' + req.body.place)
+	console.log('req.body.date=' + req.body.date)
 	
-	workshops.updateWorkshop(req.body.title, req.body.author, req.body.content,
-			req.body.contact, req.body.place, req.body.status, req.body.fk_editor, req.body.id, function(err,
+	workshops.updateWorkshop(req.body.id, req.body.title, req.body.author, req.body.content,
+			req.body.contact, req.body.place, req.body.date, req.body.status, req.body.fk_editor, function(err,
 					rows) {
 
 				console.log('Err=' + err)

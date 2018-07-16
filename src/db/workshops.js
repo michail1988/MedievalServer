@@ -26,7 +26,7 @@ exports.getWorkshop = function(id, done) {
 					})
 }
 
-exports.createWorkshop = function(title, author, content, contact, place, status, fk_editor,
+exports.createWorkshop = function(title, author, content, contact, place, date, status, fk_editor,
 		done) {
 	var values = [ title, author, content, contact, place, date, status, fk_editor ]
 
