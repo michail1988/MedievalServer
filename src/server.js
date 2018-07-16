@@ -159,6 +159,7 @@ app.get('/users', function(req, res) {
 app.put('/users', function(req, res) {
 
 	console.log('/users')
+	
 
 	users.updateUser(req.body, function(err, rows) {
 
@@ -249,6 +250,10 @@ app.get('/acceptedUsers', function(req, res) {
 	});
 })
 
+
+
+
+
 app.get('/pendingUsers', function(req, res) {
 	console.log('/pendingUsers')
 
@@ -272,6 +277,23 @@ app.get('/pendingPayment', function(req, res) {
 		res.send(rows);
 	});
 })
+
+app.get('/workshopUsers', function(req, res) {
+	console.log('/workshopUsers')
+
+	users.getWorkshop(function(err, rows) {
+		res.send(rows);
+	});
+})
+
+app.get('/invoiceUsers', function(req, res) {
+	console.log('/invoiceUsers')
+
+	users.getInvoice(function(err, rows) {
+		res.send(rows);
+	});
+})
+
 
 app.get('/rejectedUsers', function(req, res) {
 	console.log('/rejectedUsers')
@@ -451,6 +473,14 @@ app.get('/user', function(req, res) {
 			}
 		}
 
+	});
+})
+
+app.get('/usersInfo', function(req, res) {
+	console.log('/usersInfo')
+
+	users.getUsersInfo(function(err, rows) {
+		res.send(rows);
 	});
 })
 
@@ -956,11 +986,11 @@ app.post('/confirmedNewsComments', function(req, res) {
 
 })
 
-var schedules = require('./db/schedules');
+var schedulesSection = require('./db/schedulesSection');
 
 app.get('/schedules', function(req, res) {
 	console.log('schedules')
-	schedules.getAll(function(err, rows) {
+	schedulesSection.getAll(function(err, rows) {
 		res.send(rows);
 	});
 })
@@ -969,7 +999,7 @@ app.post('/schedule', function(req, res) {
 
 	console.log('/schedule')
 
-	schedules.createSchedule(req.body.title, function(err, rows) {
+	schedulesSection.createSchedule(req.body.title, req.body.status, function(err, rows) {
 		res.send('OK');
 	});
 
@@ -979,7 +1009,7 @@ app.post('/deleteSchedule', function(req, res) {
 
 	console.log('/deleteSchedule')
 
-	schedules.deleteSchedule(req.body.id, function(err, rows) {
+	schedulesSection.deleteSchedule(req.body.id, function(err, rows) {
 		res.send('OK');
 	});
 
@@ -989,7 +1019,7 @@ app.put('/schedule', function(req, res) {
 
 	console.log('/schedule')
 
-	schedules.updateSchedule(req.body.id, req.body.title, function(err, rows) {
+	schedulesSection.updateSchedule(req.body.id, req.body.title, req.body.status, function(err, rows) {
 
 		res.send('OK');
 	});
@@ -999,7 +1029,7 @@ app.put('/schedule', function(req, res) {
 app.get('/schedule', function(req, res) {
 	console.log('/schedule')
 
-	schedules.getSchedule(req.query.id, function(err, rows) {
+	schedulesSection.getSchedule(req.query.id, function(err, rows) {
 
 		if (rows == 0) {
 			console.log('Nic nie znalazlem.')
@@ -1194,6 +1224,115 @@ app.get('/profileimage', function(req, res) {
 		} else
 			console.log('sent')
 	})
+})
+
+var workshops = require('./db/workshops');
+app.get('/workshops', function(req, res) {
+	console.log('workshops get active')
+	workshops.getActive(function(err, rows) {
+		res.send(rows);
+	});
+})
+
+app.get('/deletedWorkshops', function(req, res) {
+	console.log('deletedWorkshops')
+
+	workshops.getDeleted(function(err, rows) {
+
+		var util = require('util');
+
+		console.log(util.inspect(rows, {
+			showHidden : true,
+			depth : null
+		}));
+
+		res.send(rows);
+	});
+})
+
+app.post('/workshop', function(req, res) {
+
+	console.log('/workshop')
+	workshops.createWorkshop(req.body.title, req.body.author, req.body.content,
+			req.body.contact, req.body.place, req.body.status, req.body.fk_editor, function(err, rows) {
+
+			});
+
+})
+
+app.post('/deleteWorkshop', function(req, res) {
+
+	console.log('/deleteWorkshop')
+
+	workshops.deleteWorkshop(req.body.id, req.body.fk_editor,
+			function(err, rows) {
+				res.send('OK');
+			});
+
+})
+
+app.put('/workshop', function(req, res) {
+
+	console.log('/workshop update')
+
+	console.log('req.body.title=' + req.body.title)
+	console.log('req.body.place=' + req.body.place)
+	
+	workshops.updateWorkshop(req.body.title, req.body.author, req.body.content,
+			req.body.contact, req.body.place, req.body.status, req.body.fk_editor, req.body.id, function(err,
+					rows) {
+
+				console.log('Err=' + err)
+				console.log('rows=' + rows)
+			});
+	
+	console.log('workshops get active')
+	workshops.getActive(function(err, rows) {
+		res.send(rows);
+	});
+
+})
+
+// todo michal co jesli nic nie znaleziono?
+app.get('/workshop', function(req, res) {
+	console.log('/workshop')
+
+	workshops.getWorkshop(req.query.id, function(err, rows) {
+
+		if (rows == 0) {
+			console.log('Nic nie znalazlem.')
+		}
+
+		if (rows) {
+			var util = require('util');
+
+			console.log(util.inspect(rows, {
+				showHidden : true,
+				depth : null
+			}));
+
+			console.log('Sending=' + rows)
+
+			if (rows.length == 1) {
+				var row = rows[0];
+				res.send(rows[0]);
+			}
+		}
+
+		// TODO return sth
+
+	});
+})
+
+app.post('/activateWorkshop', function(req, res) {
+
+	console.log('/activateWorkshop')
+
+	workshops.setActiveWorkshop(req.body.id, req.body.fk_editor, function(err,
+			rows) {
+		res.send('OK');
+	});
+
 })
 
 db.connect();
