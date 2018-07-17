@@ -7,10 +7,10 @@ var config = require('./config');
 var mailer = require('./utils/mailer');
 
 var originsWhitelist = [ 'http://localhost:4200', 'http://77.55.218.181:4200', // this
-																				// is
-																				// my
-																				// front-end
-																				// url
+// is
+// my
+// front-end
+// url
 // for development
 'http://www.myproductionurl.com' ];
 
@@ -159,13 +159,12 @@ app.get('/users', function(req, res) {
 app.put('/users', function(req, res) {
 
 	console.log('/users')
-	
 
 	users.updateUser(req.body, function(err, rows) {
 
 		console.log('Err=' + err)
 		console.log('rows=' + rows)
-		
+
 		users.getUser(req.body.id, function(err, rows) {
 
 			if (rows == 0) {
@@ -185,17 +184,15 @@ app.put('/users', function(req, res) {
 					res.send(rows[0]);
 				}
 			} else {
-				//TODO Michal, obsluzyc, dodac blad przy zmianie emailu na uzywany
+				// TODO Michal, obsluzyc, dodac blad przy zmianie emailu na
+				// uzywany
 				res.status(401).send({
 					message : 'Blad przy zapisie osoby'
 				});
 			}
-			
-			
 
 		});
-		
-		
+
 	});
 
 })
@@ -207,9 +204,9 @@ app.put('/userPassword', function(req, res) {
 	users.updatePassword(req.body, function(err, rows) {
 		console.log('Err=' + err)
 		console.log('rows=' + rows)
-		
-		//TODO Michal error
-		
+
+		// TODO Michal error
+
 		users.getUser(req.body.id, function(err, rows) {
 
 			if (rows == 0) {
@@ -229,13 +226,12 @@ app.put('/userPassword', function(req, res) {
 					res.send(rows[0]);
 				}
 			} else {
-				//TODO Michal, obsluzyc, dodac blad przy zmianie emailu na uzywany
+				// TODO Michal, obsluzyc, dodac blad przy zmianie emailu na
+				// uzywany
 				res.status(401).send({
 					message : 'Blad przy zapisie osoby'
 				});
 			}
-			
-			
 
 		});
 	});
@@ -249,10 +245,6 @@ app.get('/acceptedUsers', function(req, res) {
 		res.send(rows);
 	});
 })
-
-
-
-
 
 app.get('/pendingUsers', function(req, res) {
 	console.log('/pendingUsers')
@@ -293,7 +285,6 @@ app.get('/invoiceUsers', function(req, res) {
 		res.send(rows);
 	});
 })
-
 
 app.get('/rejectedUsers', function(req, res) {
 	console.log('/rejectedUsers')
@@ -437,7 +428,7 @@ app.post('/rejectPayment', function(req, res) {
 				users.rejectPayment(req.body.id, function(err, rows) {
 
 					if (config.mailEnabled === true) {
-						//mailer.sendPaymentRejected(email);
+						// mailer.sendPaymentRejected(email);
 					}
 
 					res.send('OK');
@@ -476,10 +467,75 @@ app.get('/user', function(req, res) {
 	});
 })
 
-app.get('/usersInfo', function(req, res) {
-	console.log('/usersInfo')
+app.get('/allUsersInfo', function(req, res) {
+	console.log('/allUsersInfo')
 
-	users.getUsersInfo(function(err, rows) {
+	users.getAllUsersInfo(function(err, rows) {
+		res.send(rows);
+	});
+})
+
+
+app.get('/acceptedUsersInfoUrl', function(req, res) {
+	console.log('/acceptedUsersInfoUrl')
+
+	users.getAcceptedUsersInfo(function(err, rows) {
+		res.send(rows);
+	});
+})
+
+app.get('/pendingUsersInfoUrl', function(req, res) {
+	console.log('/pendingUsersInfoUrl')
+
+	users.getPendingUsersInfo(function(err, rows) {
+		res.send(rows);
+	});
+})
+
+app.get('/rejectedUsersInfoUrl', function(req, res) {
+	console.log('/rejectedUsersInfoUrl')
+
+	users.getRejectedUsersInfo(function(err, rows) {
+		res.send(rows);
+	});
+})
+
+app.get('/speakersUsersInfoUrl', function(req, res) {
+	console.log('/speakersUsersInfoUrl')
+
+	users.getSpeakersUsersInfo(function(err, rows) {
+		res.send(rows);
+	});
+})
+
+app.get('/paymentAcceptedUsersInfoUrl', function(req, res) {
+	console.log('/paymentAcceptedUsersInfoUrl')
+
+	users.getPaymentAcceptedUsersInfo(function(err, rows) {
+		res.send(rows);
+	});
+})
+
+app.get('/paymentPendingUsersInfoUrl', function(req, res) {
+	console.log('/paymentPendingUsersInfoUrl')
+
+	users.getPaymentPendingUsersInfo(function(err, rows) {
+		res.send(rows);
+	});
+})
+
+app.get('/workshopUsersInfoUrl', function(req, res) {
+	console.log('/workshopUsersInfoUrl')
+
+	users.getWorkshopUsersInfo(function(err, rows) {
+		res.send(rows);
+	});
+})
+
+app.get('/invoiceUsersInfoUrl', function(req, res) {
+	console.log('/invoiceUsersInfoUrl')
+
+	users.getInvoiceUsersInfo(function(err, rows) {
 		res.send(rows);
 	});
 })
@@ -999,7 +1055,8 @@ app.post('/schedule', function(req, res) {
 
 	console.log('/schedule')
 
-	schedulesSection.createSchedule(req.body.title, req.body.status, function(err, rows) {
+	schedulesSection.createSchedule(req.body.title, req.body.status, function(
+			err, rows) {
 		res.send('OK');
 	});
 
@@ -1019,10 +1076,11 @@ app.put('/schedule', function(req, res) {
 
 	console.log('/schedule')
 
-	schedulesSection.updateSchedule(req.body.id, req.body.title, req.body.status, function(err, rows) {
+	schedulesSection.updateSchedule(req.body.id, req.body.title,
+			req.body.status, function(err, rows) {
 
-		res.send('OK');
-	});
+				res.send('OK');
+			});
 })
 
 // todo michal co jesli nic nie znaleziono? send error
@@ -1252,10 +1310,12 @@ app.get('/deletedWorkshops', function(req, res) {
 
 app.post('/workshop', function(req, res) {
 
-	console.log('/workshop')
-	workshops.createWorkshop(req.body.title, req.body.author, req.body.content,
-			req.body.contact, req.body.place, req.body.date, req.body.status, req.body.fk_editor, function(err, rows) {
+	console.log('/create workshop')
 
+	workshops.createWorkshop(req.body.title, req.body.author, req.body.content,
+			req.body.contact, req.body.place, req.body.date, req.body.status,
+			req.body.fk_editor, function(err, rows) {
+				res.send('OK');
 			});
 
 })
@@ -1264,10 +1324,10 @@ app.post('/deleteWorkshop', function(req, res) {
 
 	console.log('/deleteWorkshop')
 
-	workshops.deleteWorkshop(req.body.id, req.body.fk_editor,
-			function(err, rows) {
-				res.send('OK');
-			});
+	workshops.deleteWorkshop(req.body.id, req.body.fk_editor, function(err,
+			rows) {
+		res.send('OK');
+	});
 
 })
 
@@ -1278,15 +1338,15 @@ app.put('/workshop', function(req, res) {
 	console.log('req.body.title=' + req.body.title)
 	console.log('req.body.place=' + req.body.place)
 	console.log('req.body.date=' + req.body.date)
-	
-	workshops.updateWorkshop(req.body.id, req.body.title, req.body.author, req.body.content,
-			req.body.contact, req.body.place, req.body.date, req.body.status, req.body.fk_editor, function(err,
-					rows) {
+
+	workshops.updateWorkshop(req.body.id, req.body.title, req.body.author,
+			req.body.content, req.body.contact, req.body.place, req.body.date,
+			req.body.status, req.body.fk_editor, function(err, rows) {
 
 				console.log('Err=' + err)
 				console.log('rows=' + rows)
 			});
-	
+
 	console.log('workshops get active')
 	workshops.getActive(function(err, rows) {
 		res.send(rows);

@@ -147,8 +147,7 @@ exports.getInvoice = function(done) {
 					})
 }
 
-exports.getUsersInfo = function(done) {
-
+exports.getAllUsersInfo = function(done) {
 	db
 			.get()
 			.query(
@@ -160,6 +159,123 @@ exports.getUsersInfo = function(done) {
 						console.log('Users selected')
 					})
 }
+
+exports.getAcceptedUsersInfo = function(done) {
+	var values = [ 'Y' ]
+	
+	db
+			.get()
+			.query(
+					'SELECT count(*) as count FROM MED_USERS where confirmation = ? ',
+					values, function(err, rows) {
+						if (err)
+							return done(err)
+						done(null, rows)
+						console.log('Users selected')
+					})
+}
+
+exports.getPendingUsersInfo = function(done) {
+	db
+			.get()
+			.query(
+					'SELECT count(*) as count FROM MED_USERS where confirmation is null ',
+					function(err, rows) {
+						if (err)
+							return done(err)
+						done(null, rows)
+						console.log('Users selected')
+					})
+}
+
+exports.getRejectedUsersInfo = function(done) {
+	var values = [ 'N' ]
+	
+	db
+			.get()
+			.query(
+					'SELECT count(*) as count FROM MED_USERS where confirmation = ? ',
+					values, function(err, rows) {
+						if (err)
+							return done(err)
+						done(null, rows)
+						console.log('Users selected')
+					})
+}
+
+
+exports.getSpeakersUsersInfo = function(done) {
+	var values = [ 'R' ]
+	
+	db
+			.get()
+			.query(
+					'SELECT count(*) as count FROM MED_USERS where congressrole = ? ',
+					values, function(err, rows) {
+						if (err)
+							return done(err)
+						done(null, rows)
+						console.log('Users selected')
+					})
+}
+
+
+exports.getPaymentAcceptedUsersInfo = function(done) {
+	var values = [ 'Y' ]
+	
+	db
+			.get()
+			.query(
+					'SELECT count(*) as count FROM MED_USERS where payment_accepted = ? ',
+					values, function(err, rows) {
+						if (err)
+							return done(err)
+						done(null, rows)
+						console.log('Users selected')
+					})
+}
+
+exports.getPaymentPendingUsersInfo = function(done) {
+	var values = [ 'Y' ]
+	
+	db
+			.get()
+			.query(
+					'SELECT count(*) as count FROM MED_USERS where payment_accepted <> ? or payment_accepted is null ',
+					values, function(err, rows) {
+						if (err)
+							return done(err)
+						done(null, rows)
+						console.log('Users selected')
+					})
+}
+
+exports.getWorkshopUsersInfo = function(done) {
+	db
+			.get()
+			.query(
+					'SELECT count(*) as count FROM MED_USERS where participation > 1 ',
+					function(err, rows) {
+						if (err)
+							return done(err)
+						done(null, rows)
+						console.log('Users selected')
+					})
+}
+
+exports.getInvoiceUsersInfo = function(done) {
+	db
+			.get()
+			.query(
+					'SELECT count(*) as count FROM MED_USERS where invoice > 0 ',
+					function(err, rows) {
+						if (err)
+							return done(err)
+						done(null, rows)
+						console.log('Users selected')
+					})
+}
+
 
 exports.getRejected = function(done) {
 	var values = [ 'N' ]
@@ -180,7 +296,7 @@ exports.getRejected = function(done) {
 }
 
 exports.getSpeakers = function(done) {
-	var values = [ 'S' ]
+	var values = [ 'R' ]
 
 	db
 			.get()
