@@ -1312,7 +1312,7 @@ app.post('/workshop', function(req, res) {
 
 	console.log('/create workshop')
 
-	workshops.createWorkshop(req.body.title, req.body.author, req.body.content,
+	workshops.createWorkshop(req.body.headline, req.body.title, req.body.author, req.body.content,
 			req.body.contact, req.body.place, req.body.date, req.body.status,
 			req.body.fk_editor, function(err, rows) {
 				res.send('OK');
@@ -1339,7 +1339,7 @@ app.put('/workshop', function(req, res) {
 	console.log('req.body.place=' + req.body.place)
 	console.log('req.body.date=' + req.body.date)
 
-	workshops.updateWorkshop(req.body.id, req.body.title, req.body.author,
+	workshops.updateWorkshop(req.body.id, req.body.headline, req.body.title, req.body.author,
 			req.body.content, req.body.contact, req.body.place, req.body.date,
 			req.body.status, req.body.fk_editor, function(err, rows) {
 
