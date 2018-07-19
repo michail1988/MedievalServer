@@ -111,8 +111,7 @@ exports.getPending = function(done) {
 					'SELECT id, name, surname, email, password, registerdate, university, phone, congressrole, subjectdescription, '
 							+ 'contactcomments, confirmation, privileges, summary, abstract, paper_acceptation, payment, payment_accepted, academic_title, '
 							+ 'academic_status, master, engineer, participation, invoice, invoice_data, accommodation, accommodation_from, accommodation_to, '
-							+ 'meal, lactose_intolerance, gluten_intolerance, smooking_room '
-							+ ' FROM MED_USERS where confirmation is null ',
+							+ 'meal, lactose_intolerance, gluten_intolerance, smooking_room ',
 					function(err, rows) {
 						if (err)
 							return done(err)
