@@ -1396,6 +1396,56 @@ app.post('/activateWorkshop', function(req, res) {
 
 })
 
+var workshops_users = require('./db/workshops_users');
+app.get('/allWorkshops', function(req, res) {
+	console.log('allWorkshops')
+	workshops_users.getAll(function(err, rows) {
+		res.send(rows);
+	});
+})
+
+app.post('/insertWorkshop', function(req, res) {
+
+	console.log('/insertWorkshop')
+	
+	console.log('req.body.fk_user=' + req.body.fk_user)
+	console.log('req.body.fk_workshop=' + req.body.fk_workshop)
+
+	workshops_users.insertWorkshop(req.body.fk_user, req.body.fk_workshop, function(err,
+			rows) {
+		res.send('OK');
+	});
+
+})
+
+app.post('/deleteWorkshops', function(req, res) {
+
+	console.log('/deleteWorkshops')
+
+	workshops_users.deleteWorkshops(req.body.fk_user, function(err,
+			rows) {
+		res.send('OK');
+	});
+
+})
+
+app.get('/forUser', function(req, res) {
+	console.log('forUser')
+	console.log('req.query.fk_user=' + req.query.fk_user)
+	workshops_users.getForUser(req.query.fk_user, function(err, rows) {
+		res.send(rows);
+	});
+})
+
+app.get('/forWorkshop', function(req, res) {
+	console.log('forWorkshop')
+	console.log('req.query.fk_workshop=' + req.query.fk_workshop)
+	workshops_users.getForWorkshop(req.query.fk_workshop, function(err, rows) {
+		res.send(rows);
+	});
+})
+
+
 db.connect();
 
 var server = app.listen(3000, function() {
