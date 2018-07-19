@@ -8,13 +8,17 @@ exports.createUser = function(req, done) {
 			req.body.congressrole, req.body.subjectdescription,
 			req.body.contactcomments, null, '', req.body.academic_title, 
 			req.body.academic_status, req.body.master, req.body.engineer, 
-			req.body.participation, req.body.invoice, req.body.invoice_data, req.body.accommodation, req.body.accommodation_from, req.body.accommodation_to, req.body.meal, req.body.lactose_intolerance ]
+			req.body.participation, req.body.invoice, req.body.invoice_data, 
+			req.body.accommodation, req.body.accommodation_from, req.body.accommodation_to, 
+			req.body.meal, req.body.lactose_intolerance, req.body.gluten_intolerance, req.body.smooking_room ]
 
 	db
 			.get()
 			.query(
 					'insert into MED_USERS (NAME, SURNAME, EMAIL, PASSWORD, REGISTERDATE, UNIVERSITY, PHONE, CONGRESSROLE, SUBJECTDESCRIPTION, '
-							+ 'CONTACTCOMMENTS, CONFIRMATION, PRIVILEGES, academic_title, academic_status, master, engineer, participation, INVOICE, INVOICE_DATA, ACCOMMODATION, ACCOMMODATION_FROM, ACCOMMODATION_TO, MEAL, lactose_intolerance) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)',
+							+ 'CONTACTCOMMENTS, CONFIRMATION, PRIVILEGES, academic_title, academic_status, master, engineer, participation, '
+							+ 'INVOICE, INVOICE_DATA, ACCOMMODATION, ACCOMMODATION_FROM, ACCOMMODATION_TO, MEAL, lactose_intolerance, gluten_intolerance, smooking_room) '
+							+ 'VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)',
 					values, function(err, result) {
 						if (err)
 							return done(err)
@@ -30,7 +34,8 @@ exports.getAll = function(done) {
 			.query(
 					'SELECT id, name, surname, email, password, registerdate, university, phone, congressrole, subjectdescription, '
 							+ 'contactcomments, confirmation, privileges, summary, abstract, paper_acceptation, payment, payment_accepted, academic_title, '
-							+ 'academic_status, master, engineer, participation, invoice, invoice_data, accommodation, accommodation_from, accommodation_to, meal, lactose_intolerance '
+							+ 'academic_status, master, engineer, participation, invoice, invoice_data, accommodation, accommodation_from, accommodation_to, '
+							+ 'meal, lactose_intolerance, gluten_intolerance, smooking_room '
 							+ ' FROM MED_USERS', function(err, rows) {
 						if (err)
 							return done(err)
@@ -44,7 +49,8 @@ exports.updateUser = function(body, done) {
 	               body.congressrole, body.subjectdescription, body.contactcomments, body.confirmation,
 	               body.privileges, 'null', 'null', body.paper_acceptation, body.payment, body.payment_accepted,
 	               body.academic_title, body.academic_status, body.master, body.engineer, body.fk_editor, body.participation, 
-	               body.invoice, body.invoice_data, body.accommodation, body.accommodation_from, body.accommodation_to, body.meal, body.lactose_intolerance, body.id ]
+	               body.invoice, body.invoice_data, body.accommodation, body.accommodation_from, body.accommodation_to, 
+	               body.meal, body.lactose_intolerance, body.gluten_intolerance, body.smooking_room, body.id ]
 
 	db
 			.get()
@@ -52,7 +58,7 @@ exports.updateUser = function(body, done) {
 					'UPDATE MED_USERS set name =?, surname=?, email=?, password=?, university=?, phone=?, congressrole=?, '
 							+ ' subjectdescription=?, contactcomments=?, confirmation=?, privileges=?, summary=?, abstract=?, paper_acceptation=?, '
 							+ 'payment=?, payment_accepted=?, academic_title=?, academic_status=?, master=?, engineer=?, FK_EDITOR=?, '
-							+ 'participation=?, invoice=?, invoice_data=?, accommodation=?, accommodation_from=?, accommodation_to=?, meal=?, lactose_intolerance=? where ID = ?',
+							+ 'participation=?, invoice=?, invoice_data=?, accommodation=?, accommodation_from=?, accommodation_to=?, meal=?, lactose_intolerance=?, gluten_intolerance=?, smooking_room=? where ID = ?',
 					values, function(err, result) {
 						if (err)
 							return done(err)
@@ -86,7 +92,8 @@ exports.getAccepted = function(done) {
 			.query(
 					'SELECT id, name, surname, email, password, registerdate, university, phone, congressrole, subjectdescription, '
 							+ 'contactcomments, confirmation, privileges, summary, abstract, paper_acceptation, payment, payment_accepted, academic_title, '
-							+ 'academic_status, master, engineer, participation, invoice, invoice_data, accommodation, accommodation_from, accommodation_to, meal, lactose_intolerance '
+							+ 'academic_status, master, engineer, participation, invoice, invoice_data, accommodation, accommodation_from, accommodation_to, '
+							+ 'meal, lactose_intolerance, gluten_intolerance, smooking_room '
 							+ ' FROM MED_USERS where confirmation = ? ',
 					values, function(err, rows) {
 						if (err)
@@ -103,7 +110,8 @@ exports.getPending = function(done) {
 			.query(
 					'SELECT id, name, surname, email, password, registerdate, university, phone, congressrole, subjectdescription, '
 							+ 'contactcomments, confirmation, privileges, summary, abstract, paper_acceptation, payment, payment_accepted, academic_title, '
-							+ 'academic_status, master, engineer, participation, invoice, invoice_data, accommodation, accommodation_from, accommodation_to, meal, lactose_intolerance '
+							+ 'academic_status, master, engineer, participation, invoice, invoice_data, accommodation, accommodation_from, accommodation_to, '
+							+ 'meal, lactose_intolerance, gluten_intolerance, smooking_room '
 							+ ' FROM MED_USERS where confirmation is null ',
 					function(err, rows) {
 						if (err)
@@ -120,7 +128,8 @@ exports.getWorkshop = function(done) {
 			.query(
 					'SELECT id, name, surname, email, password, registerdate, university, phone, congressrole, subjectdescription, '
 							+ 'contactcomments, confirmation, privileges, summary, abstract, paper_acceptation, payment, payment_accepted, academic_title, '
-							+ 'academic_status, master, engineer, participation, invoice, invoice_data, accommodation, accommodation_from, accommodation_to, meal, lactose_intolerance '
+							+ 'academic_status, master, engineer, participation, invoice, invoice_data, accommodation, accommodation_from, accommodation_to, '
+							+ 'meal, lactose_intolerance, gluten_intolerance, smooking_room '
 							+ ' FROM MED_USERS where participation > 1 ',
 					function(err, rows) {
 						if (err)
@@ -137,7 +146,8 @@ exports.getInvoice = function(done) {
 			.query(
 					'SELECT id, name, surname, email, password, registerdate, university, phone, congressrole, subjectdescription, '
 							+ 'contactcomments, confirmation, privileges, summary, abstract, paper_acceptation, payment, payment_accepted, academic_title, '
-							+ 'academic_status, master, engineer, participation, invoice, invoice_data, accommodation, accommodation_from, accommodation_to, meal, lactose_intolerance '
+							+ 'academic_status, master, engineer, participation, invoice, invoice_data, accommodation, accommodation_from, accommodation_to, '
+							+ 'meal, lactose_intolerance, gluten_intolerance, smooking_room '
 							+ ' FROM MED_USERS where invoice > 0 ',
 					function(err, rows) {
 						if (err)
@@ -285,7 +295,8 @@ exports.getRejected = function(done) {
 			.query(
 					'SELECT id, name, surname, email, password, registerdate, university, phone, congressrole, subjectdescription, '
 							+ 'contactcomments, confirmation, privileges, summary, abstract, paper_acceptation, payment, payment_accepted, academic_title, '
-							+ 'academic_status, master, engineer, participation, invoice, invoice_data, accommodation, accommodation_from, accommodation_to, meal, lactose_intolerance '
+							+ 'academic_status, master, engineer, participation, invoice, invoice_data, accommodation, accommodation_from, accommodation_to, '
+							+ 'meal, lactose_intolerance, gluten_intolerance, smooking_room '
 							+ ' FROM MED_USERS where confirmation = ? ',
 					values, function(err, rows) {
 						if (err)
@@ -303,7 +314,8 @@ exports.getSpeakers = function(done) {
 			.query(
 					'SELECT id, name, surname, email, password, registerdate, university, phone, congressrole, subjectdescription, '
 							+ 'contactcomments, confirmation, privileges, summary, abstract, paper_acceptation, payment, payment_accepted, academic_title, '
-							+ ' academic_status, master, engineer, participation, invoice, invoice_data, accommodation, accommodation_from, accommodation_to, meal, lactose_intolerance '
+							+ ' academic_status, master, engineer, participation, invoice, invoice_data, accommodation, accommodation_from, accommodation_to, '
+							+ 'meal, lactose_intolerance, gluten_intolerance, smooking_room '
 							+ ' FROM MED_USERS where congressrole = ?', values,
 					function(err, rows) {
 						if (err)
@@ -321,7 +333,7 @@ exports.login = function(username, password, done) {
 			.query(
 					'SELECT id, name, surname, registerdate, email, password, university, phone, congressrole, subjectdescription, '
 							+ 'contactcomments, confirmation, privileges, summary, abstract, paper_acceptation, payment, payment_accepted, academic_title, '
-							+ 'academic_status, master, engineer, participation, invoice, invoice_data, accommodation, accommodation_from, accommodation_to, meal, lactose_intolerance '
+							+ 'academic_status, master, engineer, participation, invoice, invoice_data, accommodation, accommodation_from, accommodation_to, meal, lactose_intolerance, gluten_intolerance, smooking_room '
 							+ ' FROM MED_USERS where email = ? and password = ?',
 					values, function(err, rows) {
 						if (err)
@@ -339,7 +351,7 @@ exports.getUser = function(id, done) {
 			.query(
 					'SELECT id, name, surname, email, password, registerdate, university, phone, congressrole, subjectdescription, '
 							+ 'contactcomments, confirmation, privileges, summary, abstract, paper_acceptation, payment, payment_accepted, academic_title, '
-							+ 'academic_status, master, engineer, participation, invoice, invoice_data, accommodation, accommodation_from, accommodation_to, meal, lactose_intolerance '
+							+ 'academic_status, master, engineer, participation, invoice, invoice_data, accommodation, accommodation_from, accommodation_to, meal, lactose_intolerance, gluten_intolerance, smooking_room '
 							+ ' FROM MED_USERS where id = ?', values,
 					function(err, rows) {
 						if (err)
@@ -439,7 +451,7 @@ exports.getAcceptedPayment = function(done) {
 			.query(
 					'SELECT id, name, surname, email, password, registerdate, university, phone, congressrole, subjectdescription, '
 							+ 'contactcomments, confirmation, privileges, summary, abstract, paper_acceptation, payment, payment_accepted, academic_title, '
-							+ 'academic_status, master, engineer, participation, invoice, invoice_data, accommodation, accommodation_from, accommodation_to, meal, lactose_intolerance '
+							+ 'academic_status, master, engineer, participation, invoice, invoice_data, accommodation, accommodation_from, accommodation_to, meal, lactose_intolerance, gluten_intolerance, smooking_room '
 							+ ' FROM MED_USERS where payment_accepted = ? ',
 					values, function(err, rows) {
 						if (err)
@@ -457,7 +469,7 @@ exports.getPendingPayment = function(done) {
 			.query(
 					'SELECT id, name, surname, email, password, registerdate, university, phone, congressrole, subjectdescription, '
 							+ 'contactcomments, confirmation, privileges, summary, abstract, paper_acceptation, payment, payment_accepted, academic_title, '
-							+ 'academic_status, master, engineer, participation, invoice, invoice_data, accommodation, accommodation_from, accommodation_to, meal, lactose_intolerance '
+							+ 'academic_status, master, engineer, participation, invoice, invoice_data, accommodation, accommodation_from, accommodation_to, meal, lactose_intolerance, gluten_intolerance, smooking_room '
 							+ ' FROM MED_USERS where payment_accepted <> ? or payment_accepted is null ',
 					values, function(err, rows) {
 						if (err)
