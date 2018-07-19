@@ -4,7 +4,7 @@ exports.getAll = function(done) {
 	db
 			.get()
 			.query(
-					'select id, title, author, content, contact, place, date, status, fk_editor from MED_WORKSHOPS',
+					'select id, headline, title, author, content, contact, place, date, status, fk_editor from MED_WORKSHOPS',
 					function(err, rows) {
 						if (err)
 							return done(err)
@@ -18,7 +18,7 @@ exports.getWorkshop = function(id, done) {
 	db
 			.get()
 			.query(
-					'select id, title, author, content, contact, place, date, status, fk_editor from MED_WORKSHOPS where id = ?',
+					'select id, headline, title, author, content, contact, place, date, status, fk_editor from MED_WORKSHOPS where id = ?',
 					values, function(err, rows) {
 						if (err)
 							return done(err)
@@ -26,14 +26,14 @@ exports.getWorkshop = function(id, done) {
 					})
 }
 
-exports.createWorkshop = function(title, author, content, contact, place, date, status, fk_editor,
+exports.createWorkshop = function(headline, title, author, content, contact, place, date, status, fk_editor,
 		done) {
-	var values = [ title, author, content, contact, place, date, status, fk_editor ]
+	var values = [ headline, title, author, content, contact, place, date, status, fk_editor ]
 
 	db
 			.get()
 			.query(
-					'INSERT INTO MED_WORKSHOPS (title, author, content, contact, place, date, status, fk_editor) VALUES(?, ?, ?, ?, ?, ?, ?, ?)',
+					'INSERT INTO MED_WORKSHOPS (headline, title, author, content, contact, place, date, status, fk_editor) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?)',
 					values, function(err, result) {
 						if (err)
 							return done(err)
@@ -43,13 +43,13 @@ exports.createWorkshop = function(title, author, content, contact, place, date, 
 					})
 }
 
-exports.updateWorkshop = function(id, title, author, content, contact, place, date, status, fk_editor, done) {
-	var values = [ title, author, content, contact, place, date, status, fk_editor, id ]
+exports.updateWorkshop = function(id, headline, title, author, content, contact, place, date, status, fk_editor, done) {
+	var values = [ headline, title, author, content, contact, place, date, status, fk_editor, id ]
 
 	db
 			.get()
 			.query(
-					'UPDATE MED_WORKSHOPS set title=?, author=?, content=?, contact=?, place=?, date=?, status=?, fk_editor=? where ID = ?',
+					'UPDATE MED_WORKSHOPS set headline=?, title=?, author=?, content=?, contact=?, place=?, date=?, status=?, fk_editor=? where ID = ?',
 					values, function(err, result) {
 						if (err)
 							return done(err)
@@ -78,7 +78,7 @@ exports.deleteWorkshop = function(id, fk_editor, done) {
 exports.getActive = function(done) {
 	var values = [ 'D' ]
 	
-	db.get().query('SELECT id, title, author, content, contact, place, date, status, fk_editor FROM MED_WORKSHOPS where STATUS <> ? or STATUS is null',
+	db.get().query('SELECT id, headline, title, author, content, contact, place, date, status, fk_editor FROM MED_WORKSHOPS where STATUS <> ? or STATUS is null',
 			values,
 			function(err, rows) {
 				if (err)
@@ -90,7 +90,7 @@ exports.getActive = function(done) {
 exports.getDeleted = function(done) {
 	var values = [ 'D' ]
 	
-	db.get().query('SELECT id, title, author, content, contact, place, date, status, fk_editor FROM MED_WORKSHOPS where STATUS = ?',
+	db.get().query('SELECT id, headline, title, author, content, contact, place, date, status, fk_editor FROM MED_WORKSHOPS where STATUS = ?',
 			values,
 			function(err, rows) {
 				if (err)
